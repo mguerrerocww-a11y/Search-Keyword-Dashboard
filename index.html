@@ -482,11 +482,24 @@ function render(){
     plot_bgcolor: "rgba(0,0,0,0)",
     font: { color: "#e8eefc" },
     margin: {l:60, r:20, t:30, b:55},
-    legend: {orientation:"h", y:1.12},
-    xaxis: { title:"Month", type:"date", tickformat:"%b %Y", dtick:"M1", gridcolor:"#243455", zerolinecolor:"#243455" },
-    yaxis: { title: metricLabel, gridcolor:"#243455", zerolinecolor:"#243455" },
-    title: { text:`${metricLabel} trend by ${breakdownLabel} (Top ${topN})`, x:0.02, font:{size:14} }
-  };
+    margin: { l:60, r:20, t:90, b:55 },
+
+legend: {
+  orientation: "h",
+  y: 1.20,
+  yanchor: "bottom",
+  x: 0,
+  xanchor: "left"
+},
+
+title: {
+  text: `${metricLabel} trend by ${breakdownLabel} (Top ${topN})`,
+  x: 0.02,
+  y: 0.98,
+  yanchor: "top",
+  font: { size: 14 }
+}
+``
 
   Plotly.newPlot("chart", traces, layout, {displayModeBar:false, responsive:true});
   renderKPIs();
