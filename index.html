@@ -4,135 +4,385 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Search Keyword Dashboard</title>
-<script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
-  <style>
-    :root { --bg:#0b1220; --card:#101a2e; --text:#e8eefc; --muted:#a9b7d6; --accent:#6aa9ff; --border:#243455; }
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:var(--bg); color:var(--text); }
-    header { padding:18px 20px; border-bottom:1px solid var(--border); display:flex; gap:14px; align-items:center; justify-content:space-between; flex-wrap:wrap;}
-    h1 { margin:0; font-size:16px; font-weight:650; letter-spacing:.2px; }
-    .wrap { padding:16px 20px; display:grid; grid-template-columns: 360px 1fr; gap:14px; }
-    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; }
-    .card h2 { margin:0 0 10px; font-size:13px; color:var(--muted); font-weight:600; }
-    label { display:block; font-size:12px; color:var(--muted); margin:10px 0 6px; }
-    select, input[type="file"], input[type="number"], input[type="range"] {
-      width:100%; box-sizing:border-box; background:#0c162a; color:var(--text);
-      border:1px solid var(--border); border-radius:10px; padding:10px; outline:none;
-    }
-    select[multiple] { height: 180px; padding:8px; }
-    .row { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-    .kpis { display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:10px; margin-top:10px; }
-    .kpi { background:#0c162a; border:1px solid var(--border); border-radius:12px; padding:10px; }
-    .kpi .name { font-size:11px; color:var(--muted); }
-    .kpi .val { font-size:16px; font-weight:700; margin-top:6px; }
-    .hint { font-size:12px; color:var(--muted); line-height:1.35; }
-    .btn {
-      display:inline-block; padding:10px 12px; border-radius:10px; border:1px solid var(--border);
-      background:#0c162a; color:var(--text); cursor:pointer; font-size:12px;
-    }
-    .btn:hover { border-color:#2f4a7a; }
-    .small { font-size:11px; color:var(--muted); }
-    #status { color:var(--muted); font-size:12px; }
 
-    /* MoM card */
-    .momCard {
-      background:#0c162a;
+  <!-- Plotly -->
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+
+  <style>
+    :root{
+      --bg: #0b1220;
+      --panel: #0f1930;
+      --card: #101a2e;
+      --card2:#0c162a;
+      --text: #eaf0ff;
+      --muted: #a9b7d6;
+      --border: #243455;
+      --border2:#2f4a7a;
+      --accent: #6aa9ff;
+      --accent2:#55d38a;
+      --danger:#ff6b6b;
+      --shadow: 0 10px 30px rgba(0,0,0,.28);
+      --radius: 14px;
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background: radial-gradient(1200px 700px at 20% -10%, rgba(106,169,255,.10), transparent 60%),
+                  radial-gradient(900px 600px at 110% 10%, rgba(85,211,138,.08), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      line-height: 1.35;
+    }
+
+    header{
+      position: sticky; top:0; z-index: 50;
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      padding:14px 18px;
+      border-bottom:1px solid var(--border);
+      background: rgba(11,18,32,.85);
+      backdrop-filter: blur(10px);
+    }
+    .brand{ display:flex; align-items:center; gap:10px; min-width: 240px; }
+    .logo{
+      width:34px; height:34px; border-radius:10px;
+      background: linear-gradient(145deg, rgba(106,169,255,.25), rgba(85,211,138,.15));
+      border:1px solid rgba(106,169,255,.35);
+      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+    }
+    h1{ margin:0; font-size: 14px; letter-spacing: .2px; font-weight: 750; }
+    .subtitle{ font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .statusWrap{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+      text-align:right;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
       border:1px solid var(--border);
-      border-radius:12px;
-      padding:12px;
+      border-radius: 999px;
+      background: rgba(16,26,46,.7);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .dot{ width:8px; height:8px; border-radius:999px; background: var(--muted); opacity:.9; }
+    .dot.ok{ background: var(--accent2); }
+    .dot.bad{ background: var(--danger); }
+
+    .wrap{
+      padding: 16px 18px 22px;
+      display:grid;
+      grid-template-columns: 380px 1fr;
+      gap: 14px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    @media (max-width: 1100px){
+      .wrap{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(16,26,46,.95), rgba(12,22,42,.92));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .cardHeader{
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(36,52,85,.75);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .cardHeader h2{
+      margin:0;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+    }
+    .cardBody{ padding: 14px; }
+
+    label{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 12px 0 6px;
+    }
+    .help{ font-size: 11px; color: rgba(169,183,214,.85); }
+
+    select, input[type="file"], input[type="number"], input[type="range"], input[type="text"]{
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(12,22,42,.95);
+      color: var(--text);
+      padding: 10px 12px;
+      outline: none;
+    }
+    select:focus, input:focus{ border-color: var(--border2); }
+    select[multiple]{ height: 220px; padding: 10px; }
+
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    @media (max-width: 520px){ .grid2{ grid-template-columns: 1fr; } }
+
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
+    button{
+      border: 1px solid var(--border);
+      background: rgba(12,22,42,.95);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 650;
+    }
+    button:hover{ border-color: var(--border2); }
+    button.primary{
+      background: linear-gradient(180deg, rgba(106,169,255,.22), rgba(12,22,42,.95));
+      border-color: rgba(106,169,255,.40);
+    }
+    button.ghost{ background: transparent; }
+
+    .drop{
+      border: 1px dashed rgba(106,169,255,.55);
+      background: rgba(106,169,255,.08);
+      border-radius: 14px;
+      padding: 12px;
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .dropTop{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .dropHint{ font-size: 12px; color: var(--muted); }
+    .dropSmall{ font-size: 11px; color: rgba(169,183,214,.85); }
+    .drop.dragover{
+      background: rgba(85,211,138,.10);
+      border-color: rgba(85,211,138,.55);
+    }
+
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    @media (max-width: 1100px){ .kpis{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .kpi{
+      background: rgba(12,22,42,.92);
+      border: 1px solid rgba(36,52,85,.9);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+    .kpiName{ font-size: 11px; color: var(--muted); }
+    .kpiVal{ margin-top: 6px; font-size: 16px; font-weight: 820; }
+    .kpiSub{ margin-top: 2px; font-size: 11px; color: rgba(169,183,214,.85); }
+
+    .momCard{
+      background: rgba(12,22,42,.92);
+      border: 1px solid rgba(36,52,85,.9);
+      border-radius: 14px;
+      padding: 12px;
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:10px;
+      gap: 10px;
+      margin-top: 10px;
     }
-    .momMain { font-size:18px; font-weight:800; }
-    .momPos { color:#55d38a; }
-    .momNeg { color:#ff6b6b; }
-    .momSub { font-size:12px; color:var(--muted); margin-top:4px; line-height:1.25; }
+    .momMain{ font-size: 18px; font-weight: 900; }
+    .pos{ color: var(--accent2); }
+    .neg{ color: var(--danger); }
+    .momSub{ margin-top: 4px; font-size: 12px; color: var(--muted); line-height: 1.25; }
 
-    @media (max-width: 1000px){
-      .wrap { grid-template-columns: 1fr; }
-      .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    table{
+      width: 100%;
+      border-collapse: collapse;
+      overflow:hidden;
+      border-radius: 14px;
+      border: 1px solid rgba(36,52,85,.9);
+      background: rgba(12,22,42,.65);
     }
+    th, td{
+      padding: 10px 10px;
+      border-bottom: 1px solid rgba(36,52,85,.65);
+      font-size: 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th{ color: var(--muted); font-weight: 800; }
+    tr:last-child td{ border-bottom: none; }
+    .right{ text-align:right; }
+
+    .togRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .toggle{
+      display:flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border: 1px solid rgba(36,52,85,.9);
+      border-radius: 999px;
+      background: rgba(12,22,42,.75);
+      font-size: 12px;
+      color: var(--muted);
+      user-select:none;
+    }
+    .toggle input{ accent-color: var(--accent); }
+
+    #chart{ height: 520px; }
+
+    .note{ font-size: 12px; color: var(--muted); }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+
+    .loader{
+      display:none;
+      gap:10px;
+      align-items:center;
+      font-size:12px;
+      color: var(--muted);
+    }
+    .spinner{
+      width:14px; height:14px; border-radius:999px;
+      border:2px solid rgba(169,183,214,.25);
+      border-top-color: rgba(106,169,255,.85);
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
   </style>
 </head>
 
 <body>
 <header>
-  <h1>Search Keyword Dashboard (Monthly Trends)</h1>
-  <div><span id="status">No data loaded.</span></div>
+  <div class="brand">
+    <div class="logo" aria-hidden="true"></div>
+    <div>
+      <h1>Search Keyword Dashboard</h1>
+      <div class="subtitle">Weekly Trends • Upload CSV • Interactive breakdowns</div>
+    </div>
+  </div>
+
+  <div class="statusWrap">
+    <div class="loader" id="loader"><span class="spinner"></span><span>Loading…</span></div>
+    <div class="pill" title="Data load status">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">No data loaded</span>
+    </div>
+    <button class="ghost" id="btnDownloadAgg" title="Download aggregated chart data as CSV" disabled>Download chart CSV</button>
+    <button class="ghost" id="btnDownloadPng" title="Download chart image" disabled>Download PNG</button>
+  </div>
 </header>
 
 <div class="wrap">
-  <div class="card">
-    <h2>Controls</h2>
-
-    <label>Upload CSV (export from Excel “Data” tab)</label>
-    <input id="file" type="file" accept=".csv,text/csv" />
-
-    <div class="row">
-      <div>
-        <label>Metric</label>
-        <select id="metric"></select>
+  <section class="card" aria-label="Controls">
+    <div class="cardHeader">
+      <h2>Controls</h2>
+      <span class="help" id="fileMeta">No file</span>
+    </div>
+    <div class="cardBody">
+      <div class="drop" id="dropZone">
+        <div class="dropTop">
+          <div class="dropHint"><b>Upload CSV</b> (export from Excel “Data” tab)</div>
+          <input id="file" type="file" accept=".csv,text/csv" />
+        </div>
+        <div class="dropSmall">Tip: you can drag & drop a CSV anywhere inside this box.</div>
       </div>
-      <div>
-        <label>Breakdown</label>
-        <select id="breakdown"></select>
+
+      <div class="grid2" style="margin-top:10px;">
+        <div>
+          <label for="metric">Metric <span class="help">What you trend</span></label>
+          <select id="metric"></select>
+        </div>
+        <div>
+          <label for="breakdown">Breakdown <span class="help">Series grouping</span></label>
+          <select id="breakdown"></select>
+        </div>
       </div>
-    </div>
 
-    <label>Top N series (keeps the trend chart readable)</label>
-    <input id="topn" type="range" min="1" max="30" value="10" />
-    <div class="small">Top N: <span id="topnVal">10</span></div>
+      <label for="topn">Top N series <span class="help">Keeps chart readable</span></label>
+      <input id="topn" type="range" min="1" max="30" value="10" />
+      <div class="help">Top N: <span id="topnVal" class="mono">10</span></div>
 
-    <label>Filter values (based on selected breakdown)</label>
-    <select id="filterValues" multiple></select>
-    <div class="hint">Tip: leave empty to show all. Use Top N if it gets noisy.</div>
+      <div class="togRow">
+        <label class="toggle" title="Hide empty / (blank) dimension values">
+          <input type="checkbox" id="toggleHideBlank" checked>
+          Hide blanks
+        </label>
+        <label class="toggle" title="Exclude rows where selected metric is zero for that week/series">
+          <input type="checkbox" id="toggleHideZero">
+          Hide zero series
+        </label>
+      </div>
 
-    <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-      <button class="btn" id="apply">Apply</button>
-      <button class="btn" id="reset">Reset filters</button>
-    </div>
+      <label for="filterSearch">Filter values <span class="help">Search & select</span></label>
+      <input id="filterSearch" type="text" placeholder="Type to filter the list (e.g., palisade, conquest, tucson)">
 
-    <div style="margin-top:12px" class="hint">
-      <strong>Expected columns</strong> (names can vary; template uses smart matching):
-      <ul>
-        <li>Date / Month (any date-like column)</li>
-        <li>Search Keyword</li>
-        <li>Tactic</li>
-        <li>Model</li>
-        <li>Final URL</li>
-        <li>Cost/Spend</li>
-        <li>Clicks</li>
-        <li>T1 VLP</li>
-        <li>T1 VDP</li>
-        <li>Inventory Search - BSI Model Page Visit</li>
-      </ul>
-    </div>
-  </div>
+      <select id="filterValues" multiple aria-label="Filter values list"></select>
 
-  <div>
-    <div class="card">
-      <h2>Trend</h2>
-      <div id="chart" style="height:520px;"></div>
-      <div class="kpis" id="kpis"></div>
-      <div id="mom" style="margin-top:10px;"></div>
-    </div>
+      <div class="btnRow">
+        <button class="primary" id="apply">Apply</button>
+        <button id="reset">Clear filters</button>
+        <button id="selectAll">Select all (visible)</button>
+      </div>
 
-    <div class="card" style="margin-top:14px;">
-      <h2>Notes</h2>
-      <div class="hint">
-        This dashboard hosts only the template. Your CSV stays local unless you upload it.
+      <div style="margin-top:12px" class="note">
+        <b>Expected columns:</b> Date/Month, Search Keyword, Tactic, Model, Final URL, Cost, Impr./Impressions, Clicks, T1 VLP, T1 VDP, T1 BSI.
       </div>
     </div>
-  </div>
+  </section>
+
+  <main>
+    <section class="card" aria-label="Trend chart">
+      <div class="cardHeader">
+        <h2>Trend</h2>
+        <span class="help" id="summaryLine">Upload a CSV to begin</span>
+      </div>
+      <div class="cardBody">
+        <div id="chart"></div>
+        <div class="kpis" id="kpis"></div>
+        <div id="wow"></div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:14px;" aria-label="Top table">
+      <div class="cardHeader">
+        <h2>Top contributors (current week)</h2>
+        <span class="help" id="topTableNote">—</span>
+      </div>
+      <div class="cardBody">
+        <div style="overflow:auto;">
+          <table id="topTable" aria-label="Top contributors table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th class="right">Current</th>
+                <th class="right">Previous</th>
+                <th class="right">WoW</th>
+                <th class="right">Share</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="5" class="note">Upload a CSV to populate this table.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:14px;" aria-label="Notes">
+      <div class="cardHeader"><h2>Notes</h2></div>
+      <div class="cardBody">
+        <div class="note">
+          This dashboard is a static template on GitHub Pages. Your CSV is processed in your browser.
+        </div>
+      </div>
+    </section>
+  </main>
 </div>
 
 <script>
-/** ---------- Utilities ---------- **/
+/* ========= Utilities ========= */
+const $ = (id)=>document.getElementById(id);
 function norm(s){ return String(s ?? "").toLowerCase().replace(/[^a-z0-9]+/g,""); }
 
 function smartFindColumn(cols, wantedTokens){
-  const scored = cols.map(c => {
+  const scored = cols.map(c=>{
     const n = norm(c);
     let score = 0;
     for(const t of wantedTokens){
@@ -152,13 +402,14 @@ function parseCSV(text){
       if(ch === '"'){
         if(text[i+1] === '"'){ field += '"'; i+=2; continue; }
         inQuotes = false; i++; continue;
-      } else { field += ch; i++; continue; }
+      }
+      field += ch; i++; continue;
     } else {
-      if(ch === '"'){ inQuotes = true; i++; continue; }
+      if(ch === '"'){ inQuotes=true; i++; continue; }
       if(ch === ','){ row.push(field); field=""; i++; continue; }
       if(ch === '\n'){
         row.push(field); field="";
-        if(row.some(v => String(v).trim() !== "")) rows.push(row);
+        if(row.some(v=>String(v).trim()!=="")) rows.push(row);
         row=[]; i++; continue;
       }
       if(ch === '\r'){ i++; continue; }
@@ -166,13 +417,13 @@ function parseCSV(text){
     }
   }
   row.push(field);
-  if(row.some(v => String(v).trim() !== "")) rows.push(row);
+  if(row.some(v=>String(v).trim()!=="")) rows.push(row);
   return rows;
 }
 
 function toNumber(x){
   if(x == null) return null;
-  const s = String(x).replace(/[$,%]/g,"").trim();
+  const s = String(x).replace(/[$,%]/g,"").replace(/,/g,"").trim();
   if(s === "") return null;
   const v = Number(s);
   return Number.isFinite(v) ? v : null;
@@ -182,15 +433,34 @@ function toDate(x){
   if(x == null) return null;
   const s = String(x).trim();
   if(!s) return null;
-  let d = new Date(s);
-  if(!isNaN(d)) return d;
+
   const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
   if(m){
-    const mm = Number(m[1]) - 1, dd = Number(m[2]), yy = Number(m[3].length===2 ? "20"+m[3] : m[3]);
-    d = new Date(yy, mm, dd);
+    const mm = Number(m[1]) - 1;
+    const dd = Number(m[2]);
+    const yy = Number(m[3].length===2 ? ("20"+m[3]) : m[3]);
+    const d = new Date(yy, mm, dd);
     if(!isNaN(d)) return d;
   }
+
+  const d2 = new Date(s);
+  if(!isNaN(d2)) return d2;
   return null;
+}
+
+/* ========= WEEKLY BUCKET (Monday start, UTC-safe) =========
+   Uses Monday-first adjustment (day+6)%7 → Monday=0 … Sunday=6 【2-87eed8】
+*/
+function weekKeyUTC(dateObj){
+  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
+  const dayn = (d.getUTCDay() + 6) % 7; // Monday=0 … Sunday=6 【2-87eed8】
+  d.setUTCDate(d.getUTCDate() - dayn);  // back to Monday
+  return d.toISOString().slice(0,10);   // YYYY-MM-DD (Monday)
+}
+
+function weekLabel(dk){
+  const d = new Date(dk);
+  return "Week of " + d.toLocaleDateString(undefined, { month:"short", day:"2-digit", year:"numeric" });
 }
 
 function fmtCompact(n){
@@ -201,103 +471,97 @@ function fmtCompact(n){
   if(abs >= 1e3) return (n/1e3).toFixed(2)+"K";
   return n.toFixed(0);
 }
-
 function fmtMoney(n){
   if(n == null || !Number.isFinite(n)) return "—";
   return "$" + n.toLocaleString(undefined,{maximumFractionDigits:0});
 }
-
-function setStatus(msg){ document.getElementById("status").textContent = msg; }
-
-/** ---------- MoM helpers (Monthly, UTC-safe) ---------- **/
-function monthKeyUTC(dateObj){
-  const y = dateObj.getFullYear();
-  const m = dateObj.getMonth();
-  return new Date(Date.UTC(y, m, 1)).toISOString().slice(0,10); // YYYY-MM-01
+function fmtPct(p){
+  if(p == null || !Number.isFinite(p)) return "—";
+  return (p*100).toFixed(1) + "%";
+}
+function formatMoney2(v){
+  if(v == null || !Number.isFinite(v)) return "—";
+  return "$" + v.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2});
 }
 
-function monthLabel(dk){
-  const d = new Date(dk);
-  return d.toLocaleString(undefined, { month:"short", year:"numeric" });
+function setStatus(ok, msg){
+  $("statusText").textContent = msg;
+  $("statusDot").className = "dot " + (ok ? "ok" : "bad");
+}
+function showLoader(on){
+  $("loader").style.display = on ? "inline-flex" : "none";
 }
 
-function monthlyTotals(metricKey, breakdownKey, filterVals){
-  let rows = DATA;
-  if(filterVals && filterVals.length){
-    const set = new Set(filterVals);
-    rows = rows.filter(r => set.has(r[breakdownKey]));
-  }
-  const byMonth = new Map();
-  for(const r of rows){
-    const v = r[metricKey];
-    if(v == null) continue;
-    const dk = monthKeyUTC(r.date);
-    byMonth.set(dk, (byMonth.get(dk) ?? 0) + v);
-  }
-  const months = Array.from(byMonth.keys()).sort();
-  const totals = months.map(m => byMonth.get(m));
-  return { months, totals };
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
 
-function renderMoM(metricKey, breakdownKey, filterVals){
-  const wrap = document.getElementById("mom");
-  if(!wrap) return;
-
-  const { months, totals } = monthlyTotals(metricKey, breakdownKey, filterVals);
-  if(months.length < 2){ wrap.innerHTML = ""; return; }
-
-  const lastIdx = months.length - 1;
-  const curMonth = months[lastIdx];
-  const prevMonth = months[lastIdx - 1];
-  const cur = totals[lastIdx];
-  const prev = totals[lastIdx - 1];
-
-  let pct = null;
-  if(prev != null && prev !== 0) pct = (cur - prev) / prev;
-
-  const metricLabel = METRICS.find(m=>m.key===metricKey)?.label ?? metricKey;
-  const pctText = (pct == null || !Number.isFinite(pct)) ? "—" : `${pct >= 0 ? "+" : ""}${(pct*100).toFixed(1)}%`;
-  const cls = (pct == null || !Number.isFinite(pct)) ? "" : (pct >= 0 ? "momPos" : "momNeg");
-  const valFmt = (x) => metricKey === "cost" ? fmtMoney(x) : fmtCompact(x);
-
-  wrap.innerHTML = `
-    <div class="momCard">
-      <div>
-        <div class="small">MoM % change (Selected Metric)</div>
-        <div class="momMain ${cls}">${pctText}</div>
-        <div class="momSub">
-          <b>${metricLabel}</b><br>
-          ${monthLabel(curMonth)}: ${valFmt(cur)}<br>
-          ${monthLabel(prevMonth)}: ${valFmt(prev)}
-        </div>
-      </div>
-      <div class="small" style="text-align:right;">
-        ${monthLabel(prevMonth)} → ${monthLabel(curMonth)}
-      </div>
-    </div>
-  `;
-}
-
-/** ---------- State ---------- **/
+/* ========= State ========= */
 let DATA = [];
 let COLS = {};
 let DIM_OPTIONS = {};
+let LAST_AGG = null;
+
+const RAW_FIELDS = {
+  cost:  { tokens:[["cost"],["spend"]] },
+  impr:  { tokens:[["impr"],["impressions"]] },
+  clicks:{ tokens:[["clicks"],["click"]] },
+  t1vlp: { tokens:[["t1","vlp"],["t1vlp"]] },
+  t1vdp: { tokens:[["t1","vdp"],["t1vdp"]] },
+  t1bsi: { tokens:[["t1","bsi"],["bsi"]] }
+};
 
 const METRICS = [
-  { key:"cost",  label:"Cost", tokens:[["cost"],["spend"],["totalcost"]] },
-  { key:"clicks", label:"Clicks", tokens:[["clicks"],["click"]] },
-  { key:"t1vlp", label:"T1 VLP", tokens:[["t1","vlp"],["t1vlp"]] },
-  { key:"t1vdp", label:"T1 VDP", tokens:[["t1","vdp"],["t1vdp"]] },
-  { key:"bsi", label:"Inventory Search - BSI Model Page Visit", tokens:[["inventory","search","bsi","model","page","visit"],["bsi"]] }
+  { key:"cost",  label:"Cost", type:"sum", field:"cost", fmt:"money" },
+  { key:"impr",  label:"Impressions", type:"sum", field:"impr", fmt:"compact" },
+  { key:"clicks",label:"Clicks", type:"sum", field:"clicks", fmt:"compact" },
+  { key:"t1vlp", label:"T1 VLP", type:"sum", field:"t1vlp", fmt:"compact" },
+  { key:"t1vdp", label:"T1 VDP", type:"sum", field:"t1vdp", fmt:"compact" },
+  { key:"t1bsi", label:"T1 BSI", type:"sum", field:"t1bsi", fmt:"compact" },
+  { key:"ctr",   label:"CTR", type:"ratio", num:"clicks", den:"impr", fmt:"pct" },
+  { key:"cpc",   label:"CPC", type:"ratio", num:"cost", den:"clicks", fmt:"money2" },
+  { key:"cpvlp", label:"Cost / T1 VLP", type:"ratio", num:"cost", den:"t1vlp", fmt:"money2" },
+  { key:"cpvdp", label:"Cost / T1 VDP", type:"ratio", num:"cost", den:"t1vdp", fmt:"money2" },
+  { key:"cpbsi", label:"Cost / T1 BSI", type:"ratio", num:"cost", den:"t1bsi", fmt:"money2" }
 ];
 
 const BREAKDOWNS = [
   { key:"searchKeyword", label:"Search Keyword", tokens:[["search","keyword"],["keyword"]] },
   { key:"tactic", label:"Tactic", tokens:[["tactic"]] },
   { key:"model", label:"Model", tokens:[["model"]] },
-  { key:"finalUrl", label:"Final URL", tokens:[["final","url"],["landing","page"],["url"]] }
+  { key:"finalUrl", label:"Final URL", tokens:[["final","url"],["url"],["landing","page"]] },
+  { key:"campaign", label:"Campaign", tokens:[["campaign"]] },
+  { key:"account", label:"Account", tokens:[["account"]] }
 ];
 
+const LS_KEY = "skd_prefs_weekly_v1";
+
+function metricSpec(metricKey){
+  return METRICS.find(m=>m.key===metricKey) || METRICS[0];
+}
+
+function computeMetricValue(spec, sum){
+  if(spec.type === "sum") return sum[spec.field] ?? null;
+  const num = sum[spec.num] ?? null;
+  const den = sum[spec.den] ?? null;
+  if(num == null || den == null || den === 0) return null;
+  return num / den;
+}
+
+function formatBySpec(spec, value){
+  if(value == null || !Number.isFinite(value)) return "—";
+  if(spec.fmt === "money") return fmtMoney(value);
+  if(spec.fmt === "money2") return formatMoney2(value);
+  if(spec.fmt === "pct") return fmtPct(value);
+  return fmtCompact(value);
+}
+
+/* ========= Detection ========= */
 function detectColumns(headers){
   const dateCol =
     smartFindColumn(headers, ["date"]) ||
@@ -316,24 +580,26 @@ function detectColumns(headers){
     map[b.key] = found;
   }
 
-  for(const m of METRICS){
+  for(const [fieldName, spec] of Object.entries(RAW_FIELDS)){
     let found = null;
-    for(const tok of m.tokens){
+    for(const tok of spec.tokens){
       found = smartFindColumn(headers, tok);
       if(found) break;
     }
-    map[m.key] = found;
+    map[fieldName] = found;
   }
+
   return map;
 }
 
 function buildStateFromCSV(csvText){
   const rows = parseCSV(csvText);
-  const headers = rows[0].map(h => String(h).trim());
+  if(!rows.length) throw new Error("CSV appears empty.");
+  const headers = rows[0].map(h=>String(h).trim());
   const colMap = detectColumns(headers);
 
   if(!colMap.date){
-    throw new Error("Could not detect a date/month column. Add a Date or Month column to your CSV export.");
+    throw new Error("Could not detect a Date/Month column. Keep a header like 'Month' or 'Date'.");
   }
 
   const idx = {};
@@ -345,23 +611,25 @@ function buildStateFromCSV(csvText){
     const d = toDate(row[idx[colMap.date]]);
     if(!d) continue;
 
-    const obj = { date:d };
+    const obj = { date: d };
 
     for(const b of BREAKDOWNS){
       const c = colMap[b.key];
       obj[b.key] = c ? String(row[idx[c]] ?? "").trim() : "";
     }
-    for(const m of METRICS){
-      const c = colMap[m.key];
-      obj[m.key] = c ? toNumber(row[idx[c]]) : null;
+
+    for(const fieldName of Object.keys(RAW_FIELDS)){
+      const c = colMap[fieldName];
+      obj[fieldName] = c ? toNumber(row[idx[c]]) : null;
     }
 
-    if(METRICS.some(m => obj[m.key] != null)) out.push(obj);
+    const hasAny = Object.keys(RAW_FIELDS).some(k => obj[k] != null);
+    if(hasAny) out.push(obj);
   }
 
   const dimOpt = {};
   for(const b of BREAKDOWNS){
-    const set = new Set(out.map(x => x[b.key]).filter(v => v && v !== "(blank)"));
+    const set = new Set(out.map(x=>x[b.key]).filter(v=>v && v !== "(blank)"));
     dimOpt[b.key] = Array.from(set).sort((a,b)=>a.localeCompare(b));
   }
 
@@ -370,6 +638,7 @@ function buildStateFromCSV(csvText){
   DIM_OPTIONS = dimOpt;
 }
 
+/* ========= UI helpers ========= */
 function fillSelect(selectEl, options){
   selectEl.innerHTML = "";
   for(const opt of options){
@@ -379,7 +648,6 @@ function fillSelect(selectEl, options){
     selectEl.appendChild(o);
   }
 }
-
 function fillMulti(selectEl, values){
   selectEl.innerHTML = "";
   for(const v of values){
@@ -389,163 +657,497 @@ function fillMulti(selectEl, values){
     selectEl.appendChild(o);
   }
 }
-
 function getMultiSelected(selectEl){
-  return Array.from(selectEl.selectedOptions).map(o => o.value);
+  return Array.from(selectEl.selectedOptions).map(o=>o.value);
+}
+function setMultiSelected(selectEl, values){
+  const set = new Set(values || []);
+  Array.from(selectEl.options).forEach(o => { o.selected = set.has(o.value); });
+}
+function applyFilterSearch(){
+  const q = $("filterSearch").value.trim().toLowerCase();
+  const sel = $("filterValues");
+  Array.from(sel.options).forEach(o=>{
+    const show = !q || o.value.toLowerCase().includes(q);
+    o.hidden = !show;
+  });
+}
+function selectAllVisible(){
+  const sel = $("filterValues");
+  Array.from(sel.options).forEach(o=>{
+    if(!o.hidden) o.selected = true;
+  });
+}
+function clearFilters(){
+  const sel = $("filterValues");
+  Array.from(sel.options).forEach(o=>o.selected=false);
 }
 
-/** ---------- Aggregation + Plot (Monthly only, UTC-safe) ---------- **/
-function aggregate(metricKey, breakdownKey, filterVals, topN){
+/* ========= Preferences ========= */
+function savePrefs(){
+  const prefs = {
+    metric: $("metric").value,
+    breakdown: $("breakdown").value,
+    topn: Number($("topn").value),
+    hideBlank: $("toggleHideBlank").checked,
+    hideZero: $("toggleHideZero").checked,
+    filters: getMultiSelected($("filterValues"))
+  };
+  localStorage.setItem(LS_KEY, JSON.stringify(prefs));
+}
+function loadPrefs(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(_){
+    return null;
+  }
+}
+
+/* ========= Weekly aggregation ========= */
+function aggregateWeekly(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZero){
   let rows = DATA;
+
   if(filterVals && filterVals.length){
     const set = new Set(filterVals);
-    rows = rows.filter(r => set.has(r[breakdownKey]));
+    rows = rows.filter(r=> set.has(r[breakdownKey]));
   }
 
+  if(hideBlank){
+    rows = rows.filter(r => {
+      const v = r[breakdownKey];
+      return v && v !== "(blank)";
+    });
+  }
+
+  const spec = metricSpec(metricKey);
+
+  // key: weekStart(Monday)||series
   const map = new Map();
   for(const r of rows){
-    const b = r[breakdownKey] || "(blank)";
-    const m = r[metricKey];
-    if(m == null) continue;
+    const seriesName = (r[breakdownKey] || "(blank)").trim() || "(blank)";
+    const wk = weekKeyUTC(r.date);
+    const key = wk + "||" + seriesName;
 
-    const dk = monthKeyUTC(r.date); // monthly UTC bucket
-    const key = dk + "||" + b;
-    map.set(key, (map.get(key) ?? 0) + m);
+    if(!map.has(key)){
+      map.set(key, { cost:0, impr:0, clicks:0, t1vlp:0, t1vdp:0, t1bsi:0, _count:0 });
+    }
+    const agg = map.get(key);
+    for(const f of ["cost","impr","clicks","t1vlp","t1vdp","t1bsi"]){
+      const v = r[f];
+      if(v != null) agg[f] += v;
+    }
+    agg._count++;
   }
 
+  // totals per series (for ranking topN)
   const totals = new Map();
-  for(const [k,v] of map.entries()){
-    const b = k.split("||")[1];
-    totals.set(b, (totals.get(b) ?? 0) + v);
-  }
-
-  const top = Array.from(totals.entries())
-    .sort((a,b)=>b[1]-a[1])
-    .slice(0, topN)
-    .map(x=>x[0]);
-
-  const dates = Array.from(new Set(Array.from(map.keys()).map(k=>k.split("||")[0]))).sort();
-
-  const series = [];
-  for(const b of top){
-    const y = dates.map(dk => map.get(dk+"||"+b) ?? 0);
-    series.push({ name:b, x:dates, y:y });
-  }
-
-  return { dates, series };
-}
-
-function renderKPIs(){
-  const totals = {};
-  for(const m of METRICS) totals[m.key] = 0;
-  for(const r of DATA){
-    for(const m of METRICS){
-      const v = r[m.key];
-      if(v != null) totals[m.key] += v;
+  for(const [k, agg] of map.entries()){
+    const seriesName = k.split("||")[1];
+    if(!totals.has(seriesName)){
+      totals.set(seriesName, { cost:0, impr:0, clicks:0, t1vlp:0, t1vdp:0, t1bsi:0 });
+    }
+    const t = totals.get(seriesName);
+    for(const f of ["cost","impr","clicks","t1vlp","t1vdp","t1bsi"]){
+      t[f] += agg[f];
     }
   }
-  const kpiWrap = document.getElementById("kpis");
-  kpiWrap.innerHTML = "";
-  for(const m of METRICS){
+
+  const ranked = Array.from(totals.entries()).map(([name, sum])=>{
+    const v = computeMetricValue(spec, sum);
+    return { name, v: (v==null? -Infinity : v), sum };
+  }).sort((a,b)=> b.v - a.v);
+
+  const top = ranked.slice(0, topN).map(x=>x.name);
+
+  const weeks = Array.from(new Set(Array.from(map.keys()).map(k=>k.split("||")[0]))).sort();
+
+  const series = [];
+  for(const name of top){
+    const x = weeks;
+    const y = weeks.map(wk=>{
+      const agg = map.get(wk+"||"+name);
+      if(!agg) return null;
+      return computeMetricValue(spec, agg);
+    });
+
+    if(hideZero){
+      const hasNonZero = y.some(v => v != null && Math.abs(v) > 0);
+      if(!hasNonZero) continue;
+    }
+    series.push({ name, x, y });
+  }
+
+  const weekTotals = new Map();
+  for(const wk of weeks){
+    weekTotals.set(wk, { cost:0, impr:0, clicks:0, t1vlp:0, t1vdp:0, t1bsi:0 });
+  }
+  for(const [k, agg] of map.entries()){
+    const wk = k.split("||")[0];
+    const wt = weekTotals.get(wk);
+    if(!wt) continue;
+    for(const f of ["cost","impr","clicks","t1vlp","t1vdp","t1bsi"]){
+      wt[f] += agg[f];
+    }
+  }
+
+  return { weeks, series, totalsBySeries: totals, weekTotals, metric: spec };
+}
+
+/* ========= Rendering ========= */
+function renderKPIsFromTotals(weekTotals){
+  const all = { cost:0, impr:0, clicks:0, t1vlp:0, t1vdp:0, t1bsi:0 };
+  for(const sum of weekTotals.values()){
+    for(const f of Object.keys(all)) all[f] += sum[f];
+  }
+
+  const tiles = [
+    metricSpec("cost"),
+    metricSpec("clicks"),
+    metricSpec("impr"),
+    metricSpec("t1vlp"),
+    metricSpec("t1vdp"),
+    metricSpec("t1bsi"),
+    metricSpec("ctr"),
+    metricSpec("cpc")
+  ];
+
+  const wrap = $("kpis");
+  wrap.innerHTML = "";
+  for(const spec of tiles){
+    let val = null;
+    if(spec.type === "sum") val = all[spec.field];
+    else{
+      const num = all[spec.num];
+      const den = all[spec.den];
+      val = (den && den !== 0) ? (num/den) : null;
+    }
+
     const div = document.createElement("div");
     div.className = "kpi";
     div.innerHTML = `
-      <div class="name">${m.label}</div>
-      <div class="val">${m.key==="cost" ? fmtMoney(totals[m.key]) : fmtCompact(totals[m.key])}</div>
+      <div class="kpiName">${spec.label}</div>
+      <div class="kpiVal">${formatBySpec(spec,val)}</div>
+      <div class="kpiSub">All rows in file</div>
     `;
-    kpiWrap.appendChild(div);
+    wrap.appendChild(div);
   }
 }
 
-function render(){
-  const metricKey = document.getElementById("metric").value;
-  const breakdownKey = document.getElementById("breakdown").value;
-  const topN = Number(document.getElementById("topn").value);
-  const filterVals = getMultiSelected(document.getElementById("filterValues"));
+function renderWoWCard(metricKey, agg){
+  const wrap = $("wow");
+  const weeks = agg.weeks;
+  if(weeks.length < 2){ wrap.innerHTML = ""; return; }
 
-  const {series} = aggregate(metricKey, breakdownKey, filterVals, topN);
+  const spec = agg.metric;
 
-  const metricLabel = METRICS.find(m=>m.key===metricKey)?.label ?? metricKey;
+  const curWeek = weeks[weeks.length-1];
+  const prevWeek = weeks[weeks.length-2];
+
+  const curSum = agg.weekTotals.get(curWeek);
+  const prevSum = agg.weekTotals.get(prevWeek);
+
+  const curVal = computeMetricValue(spec, curSum);
+  const prevVal = computeMetricValue(spec, prevSum);
+
+  let pct = null;
+  if(prevVal != null && prevVal !== 0) pct = (curVal - prevVal)/prevVal;
+
+  const cls = (pct==null || !Number.isFinite(pct)) ? "" : (pct >= 0 ? "pos" : "neg");
+  const pctText = (pct==null || !Number.isFinite(pct)) ? "—" : `${pct>=0?"+":""}${(pct*100).toFixed(1)}%`;
+
+  wrap.innerHTML = `
+    <div class="momCard">
+      <div>
+        <div class="note"><b>WoW change</b> (selected metric)</div>
+        <div class="momMain ${cls}">${pctText}</div>
+        <div class="momSub">
+          <b>${spec.label}</b><br>
+          ${weekLabel(curWeek)}: ${formatBySpec(spec, curVal)}<br>
+          ${weekLabel(prevWeek)}: ${formatBySpec(spec, prevVal)}
+        </div>
+      </div>
+      <div class="note" style="text-align:right;">
+        ${weekLabel(prevWeek)} → ${weekLabel(curWeek)}
+      </div>
+    </div>
+  `;
+}
+
+function renderTopTable(agg, breakdownKey){
+  const tbody = $("topTable").querySelector("tbody");
+  const weeks = agg.weeks;
+  if(!weeks.length){
+    tbody.innerHTML = `<tr><td colspan="5" class="note">No data.</td></tr>`;
+    return;
+  }
+
+  const cur = weeks[weeks.length-1];
+  const prev = weeks.length>=2 ? weeks[weeks.length-2] : null;
+  const spec = agg.metric;
+
+  const rows = agg.series.map(s=>{
+    const curVal = s.y[weeks.indexOf(cur)];
+    const prevVal = prev ? s.y[weeks.indexOf(prev)] : null;
+    let wow = null;
+    if(prevVal != null && prevVal !== 0 && curVal != null) wow = (curVal - prevVal)/prevVal;
+    return { name:s.name, curVal, prevVal, wow };
+  }).sort((a,b)=> (b.curVal ?? -Infinity) - (a.curVal ?? -Infinity));
+
+  const totalCur = rows.reduce((acc,r)=> acc + (r.curVal ?? 0), 0);
+  const top15 = rows.slice(0, 15);
+
+  tbody.innerHTML = top15.map(r=>{
+    const share = totalCur ? ((r.curVal ?? 0) / totalCur) : null;
+    const wowTxt = (r.wow==null || !Number.isFinite(r.wow)) ? "—" : `${r.wow>=0?"+":""}${(r.wow*100).toFixed(1)}%`;
+    const wowCls = (r.wow==null || !Number.isFinite(r.wow)) ? "" : (r.wow>=0 ? "pos":"neg");
+    return `
+      <tr>
+        <td>${escapeHtml(r.name)}</td>
+        <td class="right">${formatBySpec(spec, r.curVal)}</td>
+        <td class="right">${prev ? formatBySpec(spec, r.prevVal) : "—"}</td>
+        <td class="right ${wowCls}">${wowTxt}</td>
+        <td class="right">${share==null ? "—" : (share*100).toFixed(1)+"%"}</td>
+      </tr>
+    `;
+  }).join("");
+
+  $("topTableNote").textContent = `${weekLabel(cur)} • Breakdown: ${BREAKDOWNS.find(b=>b.key===breakdownKey)?.label ?? breakdownKey}`;
+}
+
+function renderChart(agg, metricKey, breakdownKey, topN){
+  const spec = agg.metric;
+  const metricLabel = spec.label;
   const breakdownLabel = BREAKDOWNS.find(b=>b.key===breakdownKey)?.label ?? breakdownKey;
 
-  const traces = series.map(s => ({
-    type:"scatter",
-    mode:"lines+markers",
+  const traces = agg.series.map(s=>({
+    type: "scatter",
+    mode: "lines+markers",
     name: s.name,
     x: s.x,
     y: s.y,
-    hovertemplate: `%{x}<br><b>${metricLabel}</b>: %{y:,.2f}<extra>${s.name}</extra>`
+    hovertemplate: `%{x}<br><b>${metricLabel}</b>: %{y:,.4g}<extra>${escapeHtml(s.name)}</extra>`
   }));
 
   const layout = {
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
-    font: { color: "#e8eefc" },
-    margin: {l:60, r:20, t:30, b:55},
-    margin: { l:60, r:20, t:90, b:55 },
+    font: { color: "#eaf0ff" },
 
-legend: {
-  orientation: "h",
-  y: 1.20,
-  yanchor: "bottom",
-  x: 0,
-  xanchor: "left"
-},
+    margin: { l: 70, r: 30, t: 60, b: 110 },
 
-title: {
-  text: `${metricLabel} trend by ${breakdownLabel} (Top ${topN})`,
-  x: 0.02,
-  y: 0.98,
-  yanchor: "top",
-  font: { size: 14 }
+    legend: {
+      orientation: "h",
+      yanchor: "top",
+      y: -0.25,
+      xanchor: "center",
+      x: 0.5,
+      xref: "container",
+      yref: "container",
+      font: { size: 10 }
+    },
+
+    title: {
+      text: `${metricLabel} trend by ${breakdownLabel} (Top ${topN})`,
+      x: 0.02,
+      y: 0.98,
+      yanchor: "top",
+      font: { size: 14 }
+    },
+
+    xaxis: {
+      title: "Week",
+      type: "date",
+      tickformat: "Week of %b %d\n%Y",
+      dtick: 604800000, /* 7 days in ms 【3-9078b9】【4-dfe8db】 */
+      gridcolor: "rgba(36,52,85,.85)",
+      zerolinecolor: "rgba(36,52,85,.85)"
+    },
+
+    yaxis: {
+      title: metricLabel,
+      gridcolor: "rgba(36,52,85,.85)",
+      zerolinecolor: "rgba(36,52,85,.85)"
+    }
+  };
+
+  Plotly.newPlot("chart", traces, layout, {
+    responsive: true,
+    displayModeBar: true,
+    modeBarButtonsToRemove: ["select2d","lasso2d","autoScale2d"],
+    displaylogo: false
+  });
+
+  $("btnDownloadAgg").disabled = false;
+  $("btnDownloadPng").disabled = false;
 }
-``
 
-  Plotly.newPlot("chart", traces, layout, {displayModeBar:false, responsive:true});
-  renderKPIs();
-  renderMoM(metricKey, breakdownKey, filterVals);
+function downloadText(filename, text){
+  const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
-/** ---------- Events ---------- **/
-document.getElementById("topn").addEventListener("input", e=>{
-  document.getElementById("topnVal").textContent = e.target.value;
-});
+function downloadAggCSV(){
+  if(!LAST_AGG) return;
+  const { weeks, series, metric } = LAST_AGG;
+  const header = ["WeekStart(Mon)", ...series.map(s=>s.name)];
+  const lines = [header.join(",")];
 
-document.getElementById("breakdown").addEventListener("change", e=>{
-  const b = e.target.value;
-  fillMulti(document.getElementById("filterValues"), DIM_OPTIONS[b] ?? []);
-});
+  for(let i=0; i<weeks.length; i++){
+    const row = [weeks[i], ...series.map(s=>{
+      const v = s.y[i];
+      return (v==null || !Number.isFinite(v)) ? "" : v;
+    })];
+    lines.push(row.map(x=>{
+      const s = String(x);
+      return (s.includes(",") || s.includes('"')) ? `"${s.replaceAll('"','""')}"` : s;
+    }).join(","));
+  }
 
-document.getElementById("apply").addEventListener("click", render);
+  downloadText(`chart_weekly_${metric.key}.csv`, lines.join("\n"));
+}
 
-document.getElementById("reset").addEventListener("click", ()=>{
-  const fv = document.getElementById("filterValues");
-  Array.from(fv.options).forEach(o => o.selected = false);
-  render();
-});
+async function downloadPNG(){
+  await Plotly.downloadImage("chart", {format:"png", width:1400, height:700, filename:"chart_weekly"});
+}
 
-document.getElementById("file").addEventListener("change", async (e)=>{
-  const f = e.target.files?.[0];
-  if(!f) return;
-  const text = await f.text();
+/* ========= Main render ========= */
+function render(){
+  if(!DATA.length) return;
+
+  const metricKey = $("metric").value;
+  const breakdownKey = $("breakdown").value;
+  const topN = Number($("topn").value);
+  const hideBlank = $("toggleHideBlank").checked;
+  const hideZero = $("toggleHideZero").checked;
+  const filterVals = getMultiSelected($("filterValues"));
+
+  const agg = aggregateWeekly(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZero);
+  LAST_AGG = { ...agg, metric: metricSpec(metricKey) };
+
+  renderChart(agg, metricKey, breakdownKey, topN);
+  renderKPIsFromTotals(agg.weekTotals);
+  renderWoWCard(metricKey, agg);
+  renderTopTable(agg, breakdownKey);
+
+  const weeks = agg.weeks;
+  const range = weeks.length ? `${weekLabel(weeks[0])} → ${weekLabel(weeks[weeks.length-1])}` : "—";
+  $("summaryLine").textContent = `Range: ${range} • Rows: ${DATA.length.toLocaleString()} • Filters selected: ${filterVals.length}`;
+
+  savePrefs();
+}
+
+/* ========= Init UI ========= */
+function initUI(){
+  fillSelect($("metric"), METRICS.map(m=>({value:m.key, label:m.label})));
+  fillSelect($("breakdown"), BREAKDOWNS.map(b=>({value:b.key, label:b.label})));
+  $("topnVal").textContent = $("topn").value;
+
+  $("topn").addEventListener("input", e=>{ $("topnVal").textContent = e.target.value; });
+  $("filterSearch").addEventListener("input", applyFilterSearch);
+
+  $("breakdown").addEventListener("change", ()=>{
+    const b = $("breakdown").value;
+    fillMulti($("filterValues"), DIM_OPTIONS[b] ?? []);
+    applyFilterSearch();
+    const prefs = loadPrefs();
+    if(prefs && prefs.breakdown === b){
+      setMultiSelected($("filterValues"), prefs.filters || []);
+    }
+  });
+
+  $("apply").addEventListener("click", render);
+  $("reset").addEventListener("click", ()=>{ clearFilters(); render(); });
+  $("selectAll").addEventListener("click", ()=>{ selectAllVisible(); render(); });
+
+  $("toggleHideBlank").addEventListener("change", render);
+  $("toggleHideZero").addEventListener("change", render);
+
+  $("btnDownloadAgg").addEventListener("click", downloadAggCSV);
+  $("btnDownloadPng").addEventListener("click", downloadPNG);
+
+  const drop = $("dropZone");
+  ["dragenter","dragover"].forEach(evt=>{
+    drop.addEventListener(evt, e=>{ e.preventDefault(); drop.classList.add("dragover"); });
+  });
+  ["dragleave","drop"].forEach(evt=>{
+    drop.addEventListener(evt, e=>{ e.preventDefault(); drop.classList.remove("dragover"); });
+  });
+  drop.addEventListener("drop", async (e)=>{
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if(f) await handleFile(f);
+  });
+
+  $("file").addEventListener("change", async (e)=>{
+    const f = e.target.files && e.target.files[0];
+    if(f) await handleFile(f);
+  });
+
+  const prefs = loadPrefs();
+  if(prefs){
+    $("metric").value = prefs.metric || "cost";
+    $("breakdown").value = prefs.breakdown || "searchKeyword";
+    $("topn").value = String(prefs.topn ?? 10);
+    $("topnVal").textContent = $("topn").value;
+    $("toggleHideBlank").checked = prefs.hideBlank ?? true;
+    $("toggleHideZero").checked = prefs.hideZero ?? false;
+  } else {
+    $("metric").value = "cost";
+    $("breakdown").value = "searchKeyword";
+  }
+}
+
+async function handleFile(file){
+  showLoader(true);
+  setStatus(false, "Loading…");
+  $("btnDownloadAgg").disabled = true;
+  $("btnDownloadPng").disabled = true;
+
   try{
+    const text = await file.text();
     buildStateFromCSV(text);
 
-    fillSelect(document.getElementById("metric"), METRICS.map(m=>({value:m.key,label:m.label})));
-    fillSelect(document.getElementById("breakdown"), BREAKDOWNS.map(b=>({value:b.key,label:b.label})));
+    $("fileMeta").textContent = `${file.name} • ${(file.size/1024/1024).toFixed(1)} MB`;
 
-    document.getElementById("metric").value = "cost";
-    document.getElementById("breakdown").value = "searchKeyword";
-    fillMulti(document.getElementById("filterValues"), DIM_OPTIONS["searchKeyword"] ?? []);
+    const b = $("breakdown").value;
+    fillMulti($("filterValues"), DIM_OPTIONS[b] ?? []);
+    applyFilterSearch();
 
-    setStatus(`Loaded ${DATA.length.toLocaleString()} rows. Date column: ${COLS.date}`);
+    const prefs = loadPrefs();
+    if(prefs){
+      $("metric").value = prefs.metric || $("metric").value;
+      $("breakdown").value = prefs.breakdown || $("breakdown").value;
+      $("topn").value = String(prefs.topn ?? $("topn").value);
+      $("topnVal").textContent = $("topn").value;
+      $("toggleHideBlank").checked = prefs.hideBlank ?? $("toggleHideBlank").checked;
+      $("toggleHideZero").checked = prefs.hideZero ?? $("toggleHideZero").checked;
+
+      const bb = $("breakdown").value;
+      fillMulti($("filterValues"), DIM_OPTIONS[bb] ?? []);
+      applyFilterSearch();
+      setMultiSelected($("filterValues"), prefs.filters || []);
+    }
+
+    setStatus(true, `Loaded ${DATA.length.toLocaleString()} rows • Date column: ${COLS.date}`);
     render();
   }catch(err){
     console.error(err);
-    setStatus("Error: " + err.message);
+    setStatus(false, "Error loading CSV");
     alert(err.message);
+  }finally{
+    showLoader(false);
   }
-});
+}
+
+initUI();
 </script>
 </body>
 </html>
+``
