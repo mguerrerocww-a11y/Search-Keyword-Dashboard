@@ -10,18 +10,19 @@
 
   <style>
     :root{
-      --bg: #0b1220;
-      --panel: #0f1930;
-      --card: #101a2e;
-      --card2:#0c162a;
-      --text: #eaf0ff;
-      --muted: #a9b7d6;
-      --border: #243455;
-      --border2:#2f4a7a;
-      --accent: #6aa9ff;
-      --accent2:#55d38a;
-      --danger:#ff6b6b;
-      --shadow: 0 10px 30px rgba(0,0,0,.28);
+      /* White theme */
+      --bg: #f6f8fc;
+      --surface: #ffffff;
+      --surface2: #f2f5fb;
+      --text: #0f172a;       /* slate-900 */
+      --muted: #475569;      /* slate-600 */
+      --muted2:#64748b;      /* slate-500 */
+      --border: #e2e8f0;     /* slate-200 */
+      --border2:#cbd5e1;     /* slate-300 */
+      --accent:#2563eb;      /* blue-600 */
+      --accent2:#16a34a;     /* green-600 */
+      --danger:#dc2626;      /* red-600 */
+      --shadow: 0 10px 30px rgba(2,6,23,.08);
       --radius: 14px;
     }
 
@@ -29,9 +30,10 @@
     html,body{ height:100%; }
     body{
       margin:0;
-      background: radial-gradient(1200px 700px at 20% -10%, rgba(106,169,255,.10), transparent 60%),
-                  radial-gradient(900px 600px at 110% 10%, rgba(85,211,138,.08), transparent 55%),
-                  var(--bg);
+      background:
+        radial-gradient(1000px 550px at 10% -15%, rgba(37,99,235,.08), transparent 60%),
+        radial-gradient(900px 500px at 110% 0%, rgba(22,163,74,.06), transparent 55%),
+        var(--bg);
       color: var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       line-height: 1.35;
@@ -42,18 +44,18 @@
       display:flex; align-items:center; justify-content:space-between; gap:14px;
       padding:14px 18px;
       border-bottom:1px solid var(--border);
-      background: rgba(11,18,32,.85);
+      background: rgba(255,255,255,.86);
       backdrop-filter: blur(10px);
     }
     .brand{ display:flex; align-items:center; gap:10px; min-width: 240px; }
     .logo{
       width:34px; height:34px; border-radius:10px;
-      background: linear-gradient(145deg, rgba(106,169,255,.25), rgba(85,211,138,.15));
-      border:1px solid rgba(106,169,255,.35);
-      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+      background: linear-gradient(145deg, rgba(37,99,235,.18), rgba(22,163,74,.12));
+      border:1px solid rgba(37,99,235,.20);
+      box-shadow: 0 10px 25px rgba(2,6,23,.10);
     }
-    h1{ margin:0; font-size: 14px; letter-spacing: .2px; font-weight: 750; }
-    .subtitle{ font-size: 11px; color: var(--muted); margin-top: 2px; }
+    h1{ margin:0; font-size: 14px; letter-spacing: .2px; font-weight: 800; }
+    .subtitle{ font-size: 11px; color: var(--muted2); margin-top: 2px; }
 
     .statusWrap{
       display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;
@@ -64,11 +66,11 @@
       padding:8px 10px;
       border:1px solid var(--border);
       border-radius: 999px;
-      background: rgba(16,26,46,.7);
+      background: rgba(255,255,255,.9);
       color: var(--muted);
       font-size: 12px;
     }
-    .dot{ width:8px; height:8px; border-radius:999px; background: var(--muted); opacity:.9; }
+    .dot{ width:8px; height:8px; border-radius:999px; background: var(--muted2); opacity:.9; }
     .dot.ok{ background: var(--accent2); }
     .dot.bad{ background: var(--danger); }
 
@@ -85,21 +87,21 @@
     }
 
     .card{
-      background: linear-gradient(180deg, rgba(16,26,46,.95), rgba(12,22,42,.92));
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
     .cardHeader{
       padding: 12px 14px;
-      border-bottom: 1px solid rgba(36,52,85,.75);
+      border-bottom: 1px solid var(--border);
       display:flex; align-items:center; justify-content:space-between; gap:10px;
     }
     .cardHeader h2{
       margin:0;
       font-size: 12px;
       color: var(--muted);
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: .3px;
       text-transform: uppercase;
     }
@@ -111,18 +113,21 @@
       color: var(--muted);
       margin: 12px 0 6px;
     }
-    .help{ font-size: 11px; color: rgba(169,183,214,.85); }
+    .help{ font-size: 11px; color: var(--muted2); }
 
     select, input[type="file"], input[type="number"], input[type="range"], input[type="text"]{
       width: 100%;
       border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(12,22,42,.95);
+      border: 1px solid var(--border2);
+      background: var(--surface);
       color: var(--text);
       padding: 10px 12px;
       outline: none;
     }
-    select:focus, input:focus{ border-color: var(--border2); }
+    select:focus, input:focus{
+      border-color: rgba(37,99,235,.55);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+    }
     select[multiple]{ height: 220px; padding: 10px; }
 
     .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
@@ -130,35 +135,35 @@
 
     .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
     button{
-      border: 1px solid var(--border);
-      background: rgba(12,22,42,.95);
+      border: 1px solid var(--border2);
+      background: var(--surface);
       color: var(--text);
       padding: 10px 12px;
       border-radius: 12px;
       cursor: pointer;
       font-size: 12px;
-      font-weight: 650;
+      font-weight: 750;
     }
-    button:hover{ border-color: var(--border2); }
+    button:hover{ border-color: rgba(37,99,235,.45); }
     button.primary{
-      background: linear-gradient(180deg, rgba(106,169,255,.22), rgba(12,22,42,.95));
-      border-color: rgba(106,169,255,.40);
+      background: linear-gradient(180deg, rgba(37,99,235,.10), rgba(255,255,255,1));
+      border-color: rgba(37,99,235,.35);
     }
     button.ghost{ background: transparent; }
 
     .drop{
-      border: 1px dashed rgba(106,169,255,.55);
-      background: rgba(106,169,255,.08);
+      border: 1px dashed rgba(37,99,235,.45);
+      background: rgba(37,99,235,.04);
       border-radius: 14px;
       padding: 12px;
       display:flex; flex-direction:column; gap:8px;
     }
     .dropTop{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
     .dropHint{ font-size: 12px; color: var(--muted); }
-    .dropSmall{ font-size: 11px; color: rgba(169,183,214,.85); }
+    .dropSmall{ font-size: 11px; color: var(--muted2); }
     .drop.dragover{
-      background: rgba(85,211,138,.10);
-      border-color: rgba(85,211,138,.55);
+      background: rgba(22,163,74,.06);
+      border-color: rgba(22,163,74,.45);
     }
 
     .kpis{
@@ -169,62 +174,72 @@
     }
     @media (max-width: 1100px){ .kpis{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .kpi{
-      background: rgba(12,22,42,.92);
-      border: 1px solid rgba(36,52,85,.9);
+      background: var(--surface2);
+      border: 1px solid var(--border);
       border-radius: 14px;
       padding: 10px 12px;
     }
-    .kpiName{ font-size: 11px; color: var(--muted); }
-    .kpiVal{ margin-top: 6px; font-size: 16px; font-weight: 820; }
-    .kpiSub{ margin-top: 2px; font-size: 11px; color: rgba(169,183,214,.85); }
-
-    .momCard{
-      background: rgba(12,22,42,.92);
-      border: 1px solid rgba(36,52,85,.9);
-      border-radius: 14px;
-      padding: 12px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .momMain{ font-size: 18px; font-weight: 900; }
-    .pos{ color: var(--accent2); }
-    .neg{ color: var(--danger); }
-    .momSub{ margin-top: 4px; font-size: 12px; color: var(--muted); line-height: 1.25; }
+    .kpiName{ font-size: 11px; color: var(--muted); font-weight: 800; }
+    .kpiVal{ margin-top: 6px; font-size: 16px; font-weight: 900; }
+    .kpiSub{ margin-top: 2px; font-size: 11px; color: var(--muted2); }
 
     table{
       width: 100%;
       border-collapse: collapse;
       overflow:hidden;
       border-radius: 14px;
-      border: 1px solid rgba(36,52,85,.9);
-      background: rgba(12,22,42,.65);
+      border: 1px solid var(--border);
+      background: var(--surface);
     }
     th, td{
       padding: 10px 10px;
-      border-bottom: 1px solid rgba(36,52,85,.65);
+      border-bottom: 1px solid var(--border);
       font-size: 12px;
       text-align: left;
       vertical-align: top;
     }
-    th{ color: var(--muted); font-weight: 800; }
+    th{ color: var(--muted); font-weight: 900; background: rgba(241,245,249,.9); }
     tr:last-child td{ border-bottom: none; }
     .right{ text-align:right; }
+    .pos{ color: var(--accent2); font-weight: 800; }
+    .neg{ color: var(--danger); font-weight: 800; }
 
     .togRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
     .toggle{
       display:flex; align-items:center; gap:8px;
       padding: 8px 10px;
-      border: 1px solid rgba(36,52,85,.9);
+      border: 1px solid var(--border);
       border-radius: 999px;
-      background: rgba(12,22,42,.75);
+      background: var(--surface);
       font-size: 12px;
       color: var(--muted);
       user-select:none;
     }
     .toggle input{ accent-color: var(--accent); }
+
+    /* Segmented control */
+    .seg{
+      display:flex;
+      border:1px solid var(--border2);
+      border-radius: 12px;
+      overflow:hidden;
+      background: var(--surface);
+    }
+    .seg button{
+      border: none;
+      border-right: 1px solid var(--border);
+      border-radius: 0;
+      padding: 10px 10px;
+      background: transparent;
+      font-weight: 850;
+      color: var(--muted);
+      flex: 1;
+    }
+    .seg button:last-child{ border-right: none; }
+    .seg button.active{
+      background: rgba(37,99,235,.10);
+      color: var(--text);
+    }
 
     #chart{ height: 520px; }
 
@@ -240,8 +255,8 @@
     }
     .spinner{
       width:14px; height:14px; border-radius:999px;
-      border:2px solid rgba(169,183,214,.25);
-      border-top-color: rgba(106,169,255,.85);
+      border:2px solid rgba(2,6,23,.12);
+      border-top-color: rgba(37,99,235,.85);
       animation: spin 0.9s linear infinite;
     }
     @keyframes spin{ to{ transform: rotate(360deg); } }
@@ -254,7 +269,7 @@
     <div class="logo" aria-hidden="true"></div>
     <div>
       <h1>Search Keyword Dashboard</h1>
-      <div class="subtitle">Weekly Trends • Upload CSV • Interactive breakdowns</div>
+      <div class="subtitle">Daily / Weekly / Monthly • Upload CSV • Interactive breakdowns</div>
     </div>
   </div>
 
@@ -281,7 +296,14 @@
           <div class="dropHint"><b>Upload CSV</b> (export from Excel “Data” tab)</div>
           <input id="file" type="file" accept=".csv,text/csv" />
         </div>
-        <div class="dropSmall">Tip: you can drag & drop a CSV anywhere inside this box.</div>
+        <div class="dropSmall">Tip: drag & drop a CSV into this box.</div>
+      </div>
+
+      <label>Time grain <span class="help">Daily / Weekly / Monthly</span></label>
+      <div class="seg" role="group" aria-label="Time grain">
+        <button id="grainDaily" type="button">Daily</button>
+        <button id="grainWeekly" type="button">Weekly</button>
+        <button id="grainMonthly" type="button">Monthly</button>
       </div>
 
       <div class="grid2" style="margin-top:10px;">
@@ -304,14 +326,14 @@
           <input type="checkbox" id="toggleHideBlank" checked>
           Hide blanks
         </label>
-        <label class="toggle" title="Exclude rows where selected metric is zero for that week/series">
+        <label class="toggle" title="Exclude series with all zeros for the selected metric">
           <input type="checkbox" id="toggleHideZero">
           Hide zero series
         </label>
       </div>
 
       <label for="filterSearch">Filter values <span class="help">Search & select</span></label>
-      <input id="filterSearch" type="text" placeholder="Type to filter the list (e.g., palisade, conquest, tucson)">
+      <input id="filterSearch" type="text" placeholder="Type to filter list (e.g., palisade, conquest, tucson)">
 
       <select id="filterValues" multiple aria-label="Filter values list"></select>
 
@@ -322,7 +344,7 @@
       </div>
 
       <div style="margin-top:12px" class="note">
-        <b>Expected columns:</b> Date/Month, Search Keyword, Tactic, Model, Final URL, Cost, Impr./Impressions, Clicks, T1 VLP, T1 VDP, T1 BSI.
+        <b>Expected columns:</b> Date/Month, Search Keyword, Tactic, Model, Final URL, Cost, Impr./Impressions, Clicks, T1 VLP, T1 VDP, BSI. 【1-79352b】
       </div>
     </div>
   </section>
@@ -336,13 +358,12 @@
       <div class="cardBody">
         <div id="chart"></div>
         <div class="kpis" id="kpis"></div>
-        <div id="wow"></div>
       </div>
     </section>
 
     <section class="card" style="margin-top:14px;" aria-label="Top table">
       <div class="cardHeader">
-        <h2>Top contributors (current week)</h2>
+        <h2>Top contributors (current period)</h2>
         <span class="help" id="topTableNote">—</span>
       </div>
       <div class="cardBody">
@@ -353,7 +374,7 @@
                 <th>Item</th>
                 <th class="right">Current</th>
                 <th class="right">Previous</th>
-                <th class="right">WoW</th>
+                <th class="right">Change</th>
                 <th class="right">Share</th>
               </tr>
             </thead>
@@ -448,18 +469,40 @@ function toDate(x){
   return null;
 }
 
-/* ========= WEEKLY BUCKET (Monday start, UTC-safe) =========
-   Uses Monday-first adjustment (day+6)%7 → Monday=0 … Sunday=6 【2-87eed8】
-*/
-function weekKeyUTC(dateObj){
+/* ====== Time grain (Daily / Weekly / Monthly) ====== */
+let GRAIN = "weekly"; // default
+
+function dayKeyUTC(dateObj){
   const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
-  const dayn = (d.getUTCDay() + 6) % 7; // Monday=0 … Sunday=6 【2-87eed8】
-  d.setUTCDate(d.getUTCDate() - dayn);  // back to Monday
-  return d.toISOString().slice(0,10);   // YYYY-MM-DD (Monday)
+  return d.toISOString().slice(0,10); // YYYY-MM-DD
 }
 
-function weekLabel(dk){
-  const d = new Date(dk);
+function weekKeyUTC(dateObj){
+  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
+  const dayn = (d.getUTCDay() + 6) % 7; // Monday=0 … Sunday=6 【2-80fa4a】
+  d.setUTCDate(d.getUTCDate() - dayn);
+  return d.toISOString().slice(0,10); // Monday
+}
+
+function monthKeyUTC(dateObj){
+  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), 1));
+  return d.toISOString().slice(0,10); // YYYY-MM-01
+}
+
+function bucketKey(dateObj){
+  if(GRAIN === "daily") return dayKeyUTC(dateObj);
+  if(GRAIN === "monthly") return monthKeyUTC(dateObj);
+  return weekKeyUTC(dateObj); // weekly
+}
+
+function bucketLabel(key){
+  const d = new Date(key);
+  if(GRAIN === "daily"){
+    return d.toLocaleDateString(undefined, { month:"short", day:"2-digit", year:"numeric" });
+  }
+  if(GRAIN === "monthly"){
+    return d.toLocaleString(undefined, { month:"short", year:"numeric" });
+  }
   return "Week of " + d.toLocaleDateString(undefined, { month:"short", day:"2-digit", year:"numeric" });
 }
 
@@ -491,7 +534,6 @@ function setStatus(ok, msg){
 function showLoader(on){
   $("loader").style.display = on ? "inline-flex" : "none";
 }
-
 function escapeHtml(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -539,27 +581,7 @@ const BREAKDOWNS = [
   { key:"account", label:"Account", tokens:[["account"]] }
 ];
 
-const LS_KEY = "skd_prefs_weekly_v1";
-
-function metricSpec(metricKey){
-  return METRICS.find(m=>m.key===metricKey) || METRICS[0];
-}
-
-function computeMetricValue(spec, sum){
-  if(spec.type === "sum") return sum[spec.field] ?? null;
-  const num = sum[spec.num] ?? null;
-  const den = sum[spec.den] ?? null;
-  if(num == null || den == null || den === 0) return null;
-  return num / den;
-}
-
-function formatBySpec(spec, value){
-  if(value == null || !Number.isFinite(value)) return "—";
-  if(spec.fmt === "money") return fmtMoney(value);
-  if(spec.fmt === "money2") return formatMoney2(value);
-  if(spec.fmt === "pct") return fmtPct(value);
-  return fmtCompact(value);
-}
+const LS_KEY = "skd_prefs_grain_white_v1";
 
 /* ========= Detection ========= */
 function detectColumns(headers){
@@ -686,6 +708,7 @@ function clearFilters(){
 /* ========= Preferences ========= */
 function savePrefs(){
   const prefs = {
+    grain: GRAIN,
     metric: $("metric").value,
     breakdown: $("breakdown").value,
     topn: Number($("topn").value),
@@ -704,8 +727,27 @@ function loadPrefs(){
   }
 }
 
-/* ========= Weekly aggregation ========= */
-function aggregateWeekly(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZero){
+/* ========= Metrics ========= */
+function metricSpec(metricKey){
+  return METRICS.find(m=>m.key===metricKey) || METRICS[0];
+}
+function computeMetricValue(spec, sum){
+  if(spec.type === "sum") return sum[spec.field] ?? null;
+  const num = sum[spec.num] ?? null;
+  const den = sum[spec.den] ?? null;
+  if(num == null || den == null || den === 0) return null;
+  return num / den;
+}
+function formatBySpec(spec, value){
+  if(value == null || !Number.isFinite(value)) return "—";
+  if(spec.fmt === "money") return fmtMoney(value);
+  if(spec.fmt === "money2") return formatMoney2(value);
+  if(spec.fmt === "pct") return fmtPct(value);
+  return fmtCompact(value);
+}
+
+/* ========= Aggregation ========= */
+function aggregate(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZero){
   let rows = DATA;
 
   if(filterVals && filterVals.length){
@@ -722,12 +764,11 @@ function aggregateWeekly(metricKey, breakdownKey, filterVals, topN, hideBlank, h
 
   const spec = metricSpec(metricKey);
 
-  // key: weekStart(Monday)||series
-  const map = new Map();
+  const map = new Map(); // bucket||series -> sums
   for(const r of rows){
     const seriesName = (r[breakdownKey] || "(blank)").trim() || "(blank)";
-    const wk = weekKeyUTC(r.date);
-    const key = wk + "||" + seriesName;
+    const bk = bucketKey(r.date);
+    const key = bk + "||" + seriesName;
 
     if(!map.has(key)){
       map.set(key, { cost:0, impr:0, clicks:0, t1vlp:0, t1vdp:0, t1bsi:0, _count:0 });
@@ -740,7 +781,7 @@ function aggregateWeekly(metricKey, breakdownKey, filterVals, topN, hideBlank, h
     agg._count++;
   }
 
-  // totals per series (for ranking topN)
+  // totals per series (ranking Top N)
   const totals = new Map();
   for(const [k, agg] of map.entries()){
     const seriesName = k.split("||")[1];
@@ -755,18 +796,18 @@ function aggregateWeekly(metricKey, breakdownKey, filterVals, topN, hideBlank, h
 
   const ranked = Array.from(totals.entries()).map(([name, sum])=>{
     const v = computeMetricValue(spec, sum);
-    return { name, v: (v==null? -Infinity : v), sum };
+    return { name, v: (v==null? -Infinity : v) };
   }).sort((a,b)=> b.v - a.v);
 
   const top = ranked.slice(0, topN).map(x=>x.name);
 
-  const weeks = Array.from(new Set(Array.from(map.keys()).map(k=>k.split("||")[0]))).sort();
+  const buckets = Array.from(new Set(Array.from(map.keys()).map(k=>k.split("||")[0]))).sort();
 
   const series = [];
   for(const name of top){
-    const x = weeks;
-    const y = weeks.map(wk=>{
-      const agg = map.get(wk+"||"+name);
+    const x = buckets;
+    const y = buckets.map(bk=>{
+      const agg = map.get(bk+"||"+name);
       if(!agg) return null;
       return computeMetricValue(spec, agg);
     });
@@ -778,26 +819,26 @@ function aggregateWeekly(metricKey, breakdownKey, filterVals, topN, hideBlank, h
     series.push({ name, x, y });
   }
 
-  const weekTotals = new Map();
-  for(const wk of weeks){
-    weekTotals.set(wk, { cost:0, impr:0, clicks:0, t1vlp:0, t1vdp:0, t1bsi:0 });
+  const bucketTotals = new Map();
+  for(const bk of buckets){
+    bucketTotals.set(bk, { cost:0, impr:0, clicks:0, t1vlp:0, t1vdp:0, t1bsi:0 });
   }
   for(const [k, agg] of map.entries()){
-    const wk = k.split("||")[0];
-    const wt = weekTotals.get(wk);
-    if(!wt) continue;
+    const bk = k.split("||")[0];
+    const bt = bucketTotals.get(bk);
+    if(!bt) continue;
     for(const f of ["cost","impr","clicks","t1vlp","t1vdp","t1bsi"]){
-      wt[f] += agg[f];
+      bt[f] += agg[f];
     }
   }
 
-  return { weeks, series, totalsBySeries: totals, weekTotals, metric: spec };
+  return { buckets, series, bucketTotals, metric: spec, breakdownKey };
 }
 
 /* ========= Rendering ========= */
-function renderKPIsFromTotals(weekTotals){
+function renderKPIs(bucketTotals){
   const all = { cost:0, impr:0, clicks:0, t1vlp:0, t1vdp:0, t1bsi:0 };
-  for(const sum of weekTotals.values()){
+  for(const sum of bucketTotals.values()){
     for(const f of Object.keys(all)) all[f] += sum[f];
   }
 
@@ -834,64 +875,24 @@ function renderKPIsFromTotals(weekTotals){
   }
 }
 
-function renderWoWCard(metricKey, agg){
-  const wrap = $("wow");
-  const weeks = agg.weeks;
-  if(weeks.length < 2){ wrap.innerHTML = ""; return; }
-
-  const spec = agg.metric;
-
-  const curWeek = weeks[weeks.length-1];
-  const prevWeek = weeks[weeks.length-2];
-
-  const curSum = agg.weekTotals.get(curWeek);
-  const prevSum = agg.weekTotals.get(prevWeek);
-
-  const curVal = computeMetricValue(spec, curSum);
-  const prevVal = computeMetricValue(spec, prevSum);
-
-  let pct = null;
-  if(prevVal != null && prevVal !== 0) pct = (curVal - prevVal)/prevVal;
-
-  const cls = (pct==null || !Number.isFinite(pct)) ? "" : (pct >= 0 ? "pos" : "neg");
-  const pctText = (pct==null || !Number.isFinite(pct)) ? "—" : `${pct>=0?"+":""}${(pct*100).toFixed(1)}%`;
-
-  wrap.innerHTML = `
-    <div class="momCard">
-      <div>
-        <div class="note"><b>WoW change</b> (selected metric)</div>
-        <div class="momMain ${cls}">${pctText}</div>
-        <div class="momSub">
-          <b>${spec.label}</b><br>
-          ${weekLabel(curWeek)}: ${formatBySpec(spec, curVal)}<br>
-          ${weekLabel(prevWeek)}: ${formatBySpec(spec, prevVal)}
-        </div>
-      </div>
-      <div class="note" style="text-align:right;">
-        ${weekLabel(prevWeek)} → ${weekLabel(curWeek)}
-      </div>
-    </div>
-  `;
-}
-
-function renderTopTable(agg, breakdownKey){
+function renderTopTable(agg){
   const tbody = $("topTable").querySelector("tbody");
-  const weeks = agg.weeks;
-  if(!weeks.length){
+  const buckets = agg.buckets;
+  if(!buckets.length){
     tbody.innerHTML = `<tr><td colspan="5" class="note">No data.</td></tr>`;
     return;
   }
 
-  const cur = weeks[weeks.length-1];
-  const prev = weeks.length>=2 ? weeks[weeks.length-2] : null;
+  const cur = buckets[buckets.length-1];
+  const prev = buckets.length>=2 ? buckets[buckets.length-2] : null;
   const spec = agg.metric;
 
   const rows = agg.series.map(s=>{
-    const curVal = s.y[weeks.indexOf(cur)];
-    const prevVal = prev ? s.y[weeks.indexOf(prev)] : null;
-    let wow = null;
-    if(prevVal != null && prevVal !== 0 && curVal != null) wow = (curVal - prevVal)/prevVal;
-    return { name:s.name, curVal, prevVal, wow };
+    const curVal = s.y[buckets.indexOf(cur)];
+    const prevVal = prev ? s.y[buckets.indexOf(prev)] : null;
+    let chg = null;
+    if(prevVal != null && prevVal !== 0 && curVal != null) chg = (curVal - prevVal)/prevVal;
+    return { name:s.name, curVal, prevVal, chg };
   }).sort((a,b)=> (b.curVal ?? -Infinity) - (a.curVal ?? -Infinity));
 
   const totalCur = rows.reduce((acc,r)=> acc + (r.curVal ?? 0), 0);
@@ -899,20 +900,20 @@ function renderTopTable(agg, breakdownKey){
 
   tbody.innerHTML = top15.map(r=>{
     const share = totalCur ? ((r.curVal ?? 0) / totalCur) : null;
-    const wowTxt = (r.wow==null || !Number.isFinite(r.wow)) ? "—" : `${r.wow>=0?"+":""}${(r.wow*100).toFixed(1)}%`;
-    const wowCls = (r.wow==null || !Number.isFinite(r.wow)) ? "" : (r.wow>=0 ? "pos":"neg");
+    const chgTxt = (r.chg==null || !Number.isFinite(r.chg)) ? "—" : `${r.chg>=0?"+":""}${(r.chg*100).toFixed(1)}%`;
+    const chgCls = (r.chg==null || !Number.isFinite(r.chg)) ? "" : (r.chg>=0 ? "pos":"neg");
     return `
       <tr>
         <td>${escapeHtml(r.name)}</td>
         <td class="right">${formatBySpec(spec, r.curVal)}</td>
         <td class="right">${prev ? formatBySpec(spec, r.prevVal) : "—"}</td>
-        <td class="right ${wowCls}">${wowTxt}</td>
+        <td class="right ${chgCls}">${chgTxt}</td>
         <td class="right">${share==null ? "—" : (share*100).toFixed(1)+"%"}</td>
       </tr>
     `;
   }).join("");
 
-  $("topTableNote").textContent = `${weekLabel(cur)} • Breakdown: ${BREAKDOWNS.find(b=>b.key===breakdownKey)?.label ?? breakdownKey}`;
+  $("topTableNote").textContent = `${bucketLabel(cur)} • Breakdown: ${BREAKDOWNS.find(b=>b.key===agg.breakdownKey)?.label ?? agg.breakdownKey}`;
 }
 
 function renderChart(agg, metricKey, breakdownKey, topN){
@@ -929,10 +930,28 @@ function renderChart(agg, metricKey, breakdownKey, topN){
     hovertemplate: `%{x}<br><b>${metricLabel}</b>: %{y:,.4g}<extra>${escapeHtml(s.name)}</extra>`
   }));
 
+  let dtick = undefined;
+  let tickformat = "%b %d\n%Y";
+  let xTitle = "Date";
+
+  if(GRAIN === "daily"){
+    dtick = 86400000; // 1 day in ms
+    tickformat = "%b %d\n%Y";
+    xTitle = "Day";
+  } else if(GRAIN === "weekly"){
+    dtick = 604800000; // 7 days in ms 【3-bcc75e】【4-2b69f1】
+    tickformat = "Wk of %b %d\n%Y";
+    xTitle = "Week";
+  } else {
+    dtick = "M1"; // monthly tick step (used previously in your dashboard) 【6-9d36ce】
+    tickformat = "%b\n%Y";
+    xTitle = "Month";
+  }
+
   const layout = {
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
-    font: { color: "#eaf0ff" },
+    font: { color: "#0f172a" },
 
     margin: { l: 70, r: 30, t: 60, b: 110 },
 
@@ -956,18 +975,18 @@ function renderChart(agg, metricKey, breakdownKey, topN){
     },
 
     xaxis: {
-      title: "Week",
+      title: xTitle,
       type: "date",
-      tickformat: "Week of %b %d\n%Y",
-      dtick: 604800000, /* 7 days in ms 【3-9078b9】【4-dfe8db】 */
-      gridcolor: "rgba(36,52,85,.85)",
-      zerolinecolor: "rgba(36,52,85,.85)"
+      tickformat,
+      dtick,
+      gridcolor: "rgba(203,213,225,.9)",
+      zerolinecolor: "rgba(203,213,225,.9)"
     },
 
     yaxis: {
       title: metricLabel,
-      gridcolor: "rgba(36,52,85,.85)",
-      zerolinecolor: "rgba(36,52,85,.85)"
+      gridcolor: "rgba(203,213,225,.9)",
+      zerolinecolor: "rgba(203,213,225,.9)"
     }
   };
 
@@ -982,6 +1001,7 @@ function renderChart(agg, metricKey, breakdownKey, topN){
   $("btnDownloadPng").disabled = false;
 }
 
+/* ========= Downloads ========= */
 function downloadText(filename, text){
   const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
   const url = URL.createObjectURL(blob);
@@ -996,12 +1016,12 @@ function downloadText(filename, text){
 
 function downloadAggCSV(){
   if(!LAST_AGG) return;
-  const { weeks, series, metric } = LAST_AGG;
-  const header = ["WeekStart(Mon)", ...series.map(s=>s.name)];
+  const { buckets, series, metric } = LAST_AGG;
+  const header = ["Bucket", ...series.map(s=>s.name)];
   const lines = [header.join(",")];
 
-  for(let i=0; i<weeks.length; i++){
-    const row = [weeks[i], ...series.map(s=>{
+  for(let i=0; i<buckets.length; i++){
+    const row = [buckets[i], ...series.map(s=>{
       const v = s.y[i];
       return (v==null || !Number.isFinite(v)) ? "" : v;
     })];
@@ -1011,11 +1031,11 @@ function downloadAggCSV(){
     }).join(","));
   }
 
-  downloadText(`chart_weekly_${metric.key}.csv`, lines.join("\n"));
+  downloadText(`chart_${GRAIN}_${metric.key}.csv`, lines.join("\n"));
 }
 
 async function downloadPNG(){
-  await Plotly.downloadImage("chart", {format:"png", width:1400, height:700, filename:"chart_weekly"});
+  await Plotly.downloadImage("chart", {format:"png", width:1400, height:700, filename:`chart_${GRAIN}`});
 }
 
 /* ========= Main render ========= */
@@ -1029,29 +1049,37 @@ function render(){
   const hideZero = $("toggleHideZero").checked;
   const filterVals = getMultiSelected($("filterValues"));
 
-  const agg = aggregateWeekly(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZero);
+  const agg = aggregate(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZero);
   LAST_AGG = { ...agg, metric: metricSpec(metricKey) };
 
   renderChart(agg, metricKey, breakdownKey, topN);
-  renderKPIsFromTotals(agg.weekTotals);
-  renderWoWCard(metricKey, agg);
-  renderTopTable(agg, breakdownKey);
+  renderKPIs(agg.bucketTotals);
+  renderTopTable(agg);
 
-  const weeks = agg.weeks;
-  const range = weeks.length ? `${weekLabel(weeks[0])} → ${weekLabel(weeks[weeks.length-1])}` : "—";
-  $("summaryLine").textContent = `Range: ${range} • Rows: ${DATA.length.toLocaleString()} • Filters selected: ${filterVals.length}`;
+  const buckets = agg.buckets;
+  const range = buckets.length ? `${bucketLabel(buckets[0])} → ${bucketLabel(buckets[buckets.length-1])}` : "—";
+  $("summaryLine").textContent = `Grain: ${GRAIN.toUpperCase()} • Range: ${range} • Rows: ${DATA.length.toLocaleString()} • Filters: ${filterVals.length}`;
 
   savePrefs();
 }
 
-/* ========= Init UI ========= */
+/* ========= Init + Events ========= */
+function setGrainButtons(){
+  ["grainDaily","grainWeekly","grainMonthly"].forEach(id=> $(id).classList.remove("active"));
+  if(GRAIN === "daily") $("grainDaily").classList.add("active");
+  else if(GRAIN === "monthly") $("grainMonthly").classList.add("active");
+  else $("grainWeekly").classList.add("active");
+}
+
 function initUI(){
   fillSelect($("metric"), METRICS.map(m=>({value:m.key, label:m.label})));
   fillSelect($("breakdown"), BREAKDOWNS.map(b=>({value:b.key, label:b.label})));
   $("topnVal").textContent = $("topn").value;
 
   $("topn").addEventListener("input", e=>{ $("topnVal").textContent = e.target.value; });
-  $("filterSearch").addEventListener("input", applyFilterSearch);
+  $("filterSearch").addEventListener("input", ()=> {
+    applyFilterSearch();
+  });
 
   $("breakdown").addEventListener("change", ()=>{
     const b = $("breakdown").value;
@@ -1073,6 +1101,12 @@ function initUI(){
   $("btnDownloadAgg").addEventListener("click", downloadAggCSV);
   $("btnDownloadPng").addEventListener("click", downloadPNG);
 
+  // Grain buttons
+  $("grainDaily").addEventListener("click", ()=>{ GRAIN="daily"; setGrainButtons(); render(); });
+  $("grainWeekly").addEventListener("click", ()=>{ GRAIN="weekly"; setGrainButtons(); render(); });
+  $("grainMonthly").addEventListener("click", ()=>{ GRAIN="monthly"; setGrainButtons(); render(); });
+
+  // Dropzone
   const drop = $("dropZone");
   ["dragenter","dragover"].forEach(evt=>{
     drop.addEventListener(evt, e=>{ e.preventDefault(); drop.classList.add("dragover"); });
@@ -1090,8 +1124,10 @@ function initUI(){
     if(f) await handleFile(f);
   });
 
+  // Load prefs
   const prefs = loadPrefs();
   if(prefs){
+    GRAIN = prefs.grain || "weekly";
     $("metric").value = prefs.metric || "cost";
     $("breakdown").value = prefs.breakdown || "searchKeyword";
     $("topn").value = String(prefs.topn ?? 10);
@@ -1099,9 +1135,11 @@ function initUI(){
     $("toggleHideBlank").checked = prefs.hideBlank ?? true;
     $("toggleHideZero").checked = prefs.hideZero ?? false;
   } else {
+    GRAIN = "weekly";
     $("metric").value = "cost";
     $("breakdown").value = "searchKeyword";
   }
+  setGrainButtons();
 }
 
 async function handleFile(file){
@@ -1122,6 +1160,9 @@ async function handleFile(file){
 
     const prefs = loadPrefs();
     if(prefs){
+      GRAIN = prefs.grain || GRAIN;
+      setGrainButtons();
+
       $("metric").value = prefs.metric || $("metric").value;
       $("breakdown").value = prefs.breakdown || $("breakdown").value;
       $("topn").value = String(prefs.topn ?? $("topn").value);
@@ -1150,4 +1191,3 @@ initUI();
 </script>
 </body>
 </html>
-``
