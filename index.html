@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Search Keyword Dashboard</title>
 
-  <!-- Plotly -->
   <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
 
   <style>
@@ -36,6 +35,7 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       line-height:1.35;
     }
+
     header{
       position:sticky; top:0; z-index:50;
       display:flex; align-items:center; justify-content:space-between; gap:14px;
@@ -110,7 +110,7 @@
     }
     .help{ font-size:11px; color: var(--muted2); }
 
-    select, input[type="file"], input[type="number"], input[type="range"], input[type="text"], input[type="date"]{
+    select, input[type="file"], input[type="range"], input[type="text"], input[type="date"]{
       width:100%;
       border-radius:12px;
       border:1px solid var(--border2);
@@ -236,7 +236,6 @@
     }
 
     #chart{ height:520px; }
-
     .note{ font-size:12px; color: var(--muted); }
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
 
@@ -254,8 +253,6 @@
       animation: spin .9s linear infinite;
     }
     @keyframes spin{ to{ transform: rotate(360deg); } }
-
-    .smallBlock{ margin-top:6px; }
   </style>
 </head>
 
@@ -303,15 +300,15 @@
         <button id="grainMonthly" type="button">Monthly</button>
       </div>
 
-      <label>Date range <span class="help">Filter what period is included</span></label>
+      <label>Date range <span class="help">Controls which buckets appear on the chart</span></label>
       <div class="grid2">
         <div>
           <input id="dateStart" type="date" disabled />
-          <div class="help smallBlock">Start date</div>
+          <div class="help" style="margin-top:6px;">Start date</div>
         </div>
         <div>
           <input id="dateEnd" type="date" disabled />
-          <div class="help smallBlock">End date</div>
+          <div class="help" style="margin-top:6px;">End date</div>
         </div>
       </div>
       <div class="btnRow">
@@ -333,18 +330,17 @@
       <input id="topn" type="range" min="1" max="30" value="10" />
       <div class="help">Top N: <span id="topnVal" class="mono">10</span></div>
 
-      <!-- NEW: Simple Top N explanation label -->
-      <div class="note" id="topNExplain">
-        <b>What this means:</b> The chart will only show the <b>Top N</b> lines (based on your selected metric),
-        so you don’t end up with hundreds of lines on the chart.
+      <div class="note" style="margin-top:6px;">
+        <b>What this means:</b> Only the <b>Top N</b> items (based on your selected metric) are shown as lines,
+        so the chart doesn’t become unreadable. 【1-c59ba6】
       </div>
 
       <div class="togRow">
-        <label class="toggle" title="Hide empty / (blank) dimension values">
+        <label class="toggle">
           <input type="checkbox" id="toggleHideBlank" checked>
           Hide blanks
         </label>
-        <label class="toggle" title="Exclude series with all zeros for the selected metric">
+        <label class="toggle">
           <input type="checkbox" id="toggleHideZero">
           Hide zero series
         </label>
@@ -352,7 +348,6 @@
 
       <label for="filterSearch">Filter values <span class="help">Search & select</span></label>
       <input id="filterSearch" type="text" placeholder="Type to filter list (e.g., palisade, conquest, tucson)">
-
       <select id="filterValues" multiple aria-label="Filter values list"></select>
 
       <div class="btnRow">
@@ -523,22 +518,16 @@ function escapeHtml(s){
 }
 
 /* ====== Time grain ====== */
-let GRAIN = "weekly";
+let GRAIN = "weekly"; // default
+function dayKeyUTC(d){ const x = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); return x.toISOString().slice(0,10); }
+function weekKeyUTC(d){
+  const x = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayn = (x.getUTCDay() + 6) % 7; // Monday=0 … Sunday=6 【2-ff4534】
+  x.setUTCDate(x.getUTCDate() - dayn);
+  return x.toISOString().slice(0,10);
+}
+function monthKeyUTC(d){ const x = new Date(Date.UTC(d.getFullYear(), d.getMonth(), 1)); return x.toISOString().slice(0,10); }
 
-function dayKeyUTC(dateObj){
-  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
-  return d.toISOString().slice(0,10);
-}
-function weekKeyUTC(dateObj){
-  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
-  const dayn = (d.getUTCDay() + 6) % 7; // Monday=0 … Sunday=6
-  d.setUTCDate(d.getUTCDate() - dayn);
-  return d.toISOString().slice(0,10);
-}
-function monthKeyUTC(dateObj){
-  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), 1));
-  return d.toISOString().slice(0,10);
-}
 function bucketKey(dateObj){
   if(GRAIN === "daily") return dayKeyUTC(dateObj);
   if(GRAIN === "monthly") return monthKeyUTC(dateObj);
@@ -546,13 +535,78 @@ function bucketKey(dateObj){
 }
 function bucketLabel(key){
   const d = new Date(key);
-  if(GRAIN === "daily"){
-    return d.toLocaleDateString(undefined, { month:"short", day:"2-digit", year:"numeric" });
-  }
-  if(GRAIN === "monthly"){
-    return d.toLocaleString(undefined, { month:"short", year:"numeric" });
-  }
+  if(GRAIN === "daily") return d.toLocaleDateString(undefined, { month:"short", day:"2-digit", year:"numeric" });
+  if(GRAIN === "monthly") return d.toLocaleString(undefined, { month:"short", year:"numeric" });
   return "Week of " + d.toLocaleDateString(undefined, { month:"short", day:"2-digit", year:"numeric" });
+}
+
+/* ✅ NEW: Build a complete list of buckets matching the grain & date range */
+function addDaysUTC(dateUTC, days){
+  const d = new Date(dateUTC.getTime());
+  d.setUTCDate(d.getUTCDate() + days);
+  return d;
+}
+function monthAddUTC(dateUTC, months){
+  const d = new Date(dateUTC.getTime());
+  d.setUTCMonth(d.getUTCMonth() + months);
+  return d;
+}
+function toUTCDateOnly(dateObj){
+  return new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
+}
+function listBucketsForRange(startDate, endDate){
+  // startDate/endDate are Date objects (local); convert to UTC day
+  let s = toUTCDateOnly(startDate);
+  let e = toUTCDateOnly(endDate);
+  if(e < s){ const tmp=s; s=e; e=tmp; }
+
+  const buckets = [];
+  if(GRAIN === "daily"){
+    let cur = s;
+    while(cur <= e){
+      buckets.push(cur.toISOString().slice(0,10));
+      cur = addDaysUTC(cur, 1);
+    }
+    return buckets;
+  }
+
+  if(GRAIN === "weekly"){
+    // Start at week bucket (Monday) for start date
+    const startKey = weekKeyUTC(s);
+    const endKey = weekKeyUTC(e);
+    let cur = new Date(startKey + "T00:00:00Z");
+    const end = new Date(endKey + "T00:00:00Z");
+    while(cur <= end){
+      buckets.push(cur.toISOString().slice(0,10));
+      cur = addDaysUTC(cur, 7);
+    }
+    return buckets;
+  }
+
+  // monthly
+  const startKey = monthKeyUTC(s);
+  const endKey = monthKeyUTC(e);
+  let cur = new Date(startKey + "T00:00:00Z");
+  const end = new Date(endKey + "T00:00:00Z");
+  while(cur <= end){
+    buckets.push(cur.toISOString().slice(0,10));
+    cur = monthAddUTC(cur, 1);
+  }
+  return buckets;
+}
+
+/* ========= Date range ========= */
+let DATE_MIN = null;
+let DATE_MAX = null;
+function getDateRange(){
+  const s = $("dateStart").value ? new Date($("dateStart").value + "T00:00:00") : null;
+  const e = $("dateEnd").value ? new Date($("dateEnd").value + "T23:59:59") : null;
+  return { s, e };
+}
+function inRange(d, s, e){
+  if(s && d < s) return false;
+  if(e && d > e) return false;
+  return true;
 }
 
 /* ========= State ========= */
@@ -593,25 +647,9 @@ const BREAKDOWNS = [
   { key:"account", label:"Account", tokens:[["account"]] }
 ];
 
-const LS_KEY = "skd_prefs_grain_white_dates_v1";
+const LS_KEY = "skd_prefs_grain_white_dates_v2";
 
-/* ========= Date range state (from UI) ========= */
-let DATE_MIN = null;
-let DATE_MAX = null;
-
-function getDateRange(){
-  const s = $("dateStart").value ? new Date($("dateStart").value + "T00:00:00") : null;
-  const e = $("dateEnd").value ? new Date($("dateEnd").value + "T23:59:59") : null;
-  return { s, e };
-}
-
-function inRange(d, s, e){
-  if(s && d < s) return false;
-  if(e && d > e) return false;
-  return true;
-}
-
-/* ========= Detection ========= */
+/* ========= Detection + CSV build ========= */
 function detectColumns(headers){
   const dateCol =
     smartFindColumn(headers, ["date"]) ||
@@ -687,7 +725,6 @@ function buildStateFromCSV(csvText){
   COLS = colMap;
   DIM_OPTIONS = dimOpt;
 
-  // set min/max dates for date picker
   if(DATA.length){
     const sorted = [...DATA].sort((a,b)=>a.date - b.date);
     DATE_MIN = sorted[0].date;
@@ -725,8 +762,7 @@ function applyFilterSearch(){
   const q = $("filterSearch").value.trim().toLowerCase();
   const sel = $("filterValues");
   Array.from(sel.options).forEach(o=>{
-    const show = !q || o.value.toLowerCase().includes(q);
-    o.hidden = !show;
+    o.hidden = q && !o.value.toLowerCase().includes(q);
   });
 }
 function selectAllVisible(){
@@ -783,10 +819,13 @@ function formatBySpec(spec, value){
   return fmtCompact(value);
 }
 
-/* ========= Aggregation ========= */
+/* ========= Aggregation (FIXED to use full bucket sequence) ========= */
 function aggregate(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZero){
   const { s: startD, e: endD } = getDateRange();
+  const useStart = startD || DATE_MIN || new Date();
+  const useEnd = endD || DATE_MAX || new Date();
 
+  // Filter rows by date range FIRST
   let rows = DATA.filter(r => inRange(r.date, startD, endD));
 
   if(filterVals && filterVals.length){
@@ -803,6 +842,10 @@ function aggregate(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZer
 
   const spec = metricSpec(metricKey);
 
+  // Build complete bucket list for the selected grain and date range
+  const buckets = listBucketsForRange(useStart, useEnd);
+
+  // bucket||series -> sums
   const map = new Map();
   for(const r of rows){
     const seriesName = (r[breakdownKey] || "(blank)").trim() || "(blank)";
@@ -820,6 +863,7 @@ function aggregate(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZer
     agg._count++;
   }
 
+  // totals per series for Top N ranking
   const totals = new Map();
   for(const [k, agg] of map.entries()){
     const seriesName = k.split("||")[1];
@@ -839,15 +883,19 @@ function aggregate(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZer
 
   const top = ranked.slice(0, topN).map(x=>x.name);
 
-  const buckets = Array.from(new Set(Array.from(map.keys()).map(k=>k.split("||")[0]))).sort();
+  // Build series using COMPLETE bucket list; fill missing buckets:
+  // - Sum metrics: fill missing as 0
+  // - Ratio metrics: fill missing as null (so you don't show fake rates)
+  const fillMissing = (spec.type === "sum") ? 0 : null;
 
   const series = [];
   for(const name of top){
     const x = buckets;
     const y = buckets.map(bk=>{
       const agg = map.get(bk+"||"+name);
-      if(!agg) return null;
-      return computeMetricValue(spec, agg);
+      if(!agg) return fillMissing;
+      const v = computeMetricValue(spec, agg);
+      return (v == null ? fillMissing : v);
     });
 
     if(hideZero){
@@ -857,6 +905,7 @@ function aggregate(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZer
     series.push({ name, x, y });
   }
 
+  // Totals per bucket (complete bucket list)
   const bucketTotals = new Map();
   for(const bk of buckets){
     bucketTotals.set(bk, { cost:0, impr:0, clicks:0, t1vlp:0, t1vdp:0, t1bsi:0 });
@@ -973,11 +1022,11 @@ function renderChart(agg, metricKey, breakdownKey, topN){
   let xTitle = "Date";
 
   if(GRAIN === "daily"){
-    dtick = 86400000;
+    dtick = 86400000; // 1 day
     tickformat = "%b %d\n%Y";
     xTitle = "Day";
   } else if(GRAIN === "weekly"){
-    dtick = 604800000; /* 7 days in ms 【2-78540e】【3-f582f5】 */
+    dtick = 604800000; // 7 days 【3-5d0c1a】【4-5b5710】
     tickformat = "Wk of %b %d\n%Y";
     xTitle = "Week";
   } else {
@@ -1038,7 +1087,6 @@ function renderChart(agg, metricKey, breakdownKey, topN){
   $("btnDownloadPng").disabled = false;
 }
 
-/* ========= Downloads ========= */
 function downloadText(filename, text){
   const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
   const url = URL.createObjectURL(blob);
@@ -1050,7 +1098,6 @@ function downloadText(filename, text){
   a.remove();
   URL.revokeObjectURL(url);
 }
-
 function downloadAggCSV(){
   if(!LAST_AGG) return;
   const { buckets, series, metric } = LAST_AGG;
@@ -1070,7 +1117,6 @@ function downloadAggCSV(){
 
   downloadText(`chart_${GRAIN}_${metric.key}.csv`, lines.join("\n"));
 }
-
 async function downloadPNG(){
   await Plotly.downloadImage("chart", {format:"png", width:1400, height:700, filename:`chart_${GRAIN}`});
 }
@@ -1100,7 +1146,7 @@ function render(){
   savePrefs();
 }
 
-/* ========= Init + Events ========= */
+/* ========= Init UI ========= */
 function setGrainButtons(){
   ["grainDaily","grainWeekly","grainMonthly"].forEach(id=> $(id).classList.remove("active"));
   if(GRAIN === "daily") $("grainDaily").classList.add("active");
@@ -1127,11 +1173,9 @@ function initDateControls(){
   start.min = minISO; start.max = maxISO;
   end.min = minISO; end.max = maxISO;
 
-  // If empty, default to full range
   if(!start.value) start.value = minISO;
   if(!end.value) end.value = maxISO;
 
-  // Keep bounds sane if user edits
   start.addEventListener("change", ()=>{
     if(end.value && start.value > end.value) end.value = start.value;
     render();
@@ -1155,17 +1199,13 @@ function initUI(){
 
   $("topn").addEventListener("input", e=>{ $("topnVal").textContent = e.target.value; });
 
-  $("filterSearch").addEventListener("input", ()=>{
-    const q = $("filterSearch").value.trim().toLowerCase();
-    const sel = $("filterValues");
-    Array.from(sel.options).forEach(o=>{
-      o.hidden = q && !o.value.toLowerCase().includes(q);
-    });
-  });
+  $("filterSearch").addEventListener("input", applyFilterSearch);
 
   $("breakdown").addEventListener("change", ()=>{
     const b = $("breakdown").value;
     fillMulti($("filterValues"), DIM_OPTIONS[b] ?? []);
+    applyFilterSearch();
+    render();
   });
 
   $("apply").addEventListener("click", render);
@@ -1199,7 +1239,7 @@ function initUI(){
     if(f) await handleFile(f);
   });
 
-  // Load prefs (applied after file load too)
+  // Load prefs
   const prefs = loadPrefs();
   if(prefs){
     GRAIN = prefs.grain || "weekly";
@@ -1233,15 +1273,15 @@ async function handleFile(file){
 
     const b = $("breakdown").value;
     fillMulti($("filterValues"), DIM_OPTIONS[b] ?? []);
+    applyFilterSearch();
 
-    // Enable and initialize date pickers (uses file min/max)
     initDateControls();
 
-    // restore filters after file load if prefs exist
     const prefs = loadPrefs();
     if(prefs){
       GRAIN = prefs.grain || GRAIN;
       setGrainButtons();
+
       $("metric").value = prefs.metric || $("metric").value;
       $("breakdown").value = prefs.breakdown || $("breakdown").value;
       $("topn").value = String(prefs.topn ?? $("topn").value);
@@ -1249,12 +1289,11 @@ async function handleFile(file){
       $("toggleHideBlank").checked = prefs.hideBlank ?? $("toggleHideBlank").checked;
       $("toggleHideZero").checked = prefs.hideZero ?? $("toggleHideZero").checked;
 
-      // re-init filter list for breakdown and apply selection
       const bb = $("breakdown").value;
       fillMulti($("filterValues"), DIM_OPTIONS[bb] ?? []);
       setMultiSelected($("filterValues"), prefs.filters || []);
+      applyFilterSearch();
 
-      // apply date prefs if set and within bounds
       if(prefs.dateStart) $("dateStart").value = prefs.dateStart;
       if(prefs.dateEnd) $("dateEnd").value = prefs.dateEnd;
     }
