@@ -10,23 +10,21 @@
 
   <style>
     :root{
-      /* White theme */
-      --bg: #f6f8fc;
-      --surface: #ffffff;
-      --surface2: #f2f5fb;
-      --text: #0f172a;       /* slate-900 */
-      --muted: #475569;      /* slate-600 */
-      --muted2:#64748b;      /* slate-500 */
-      --border: #e2e8f0;     /* slate-200 */
-      --border2:#cbd5e1;     /* slate-300 */
-      --accent:#2563eb;      /* blue-600 */
-      --accent2:#16a34a;     /* green-600 */
-      --danger:#dc2626;      /* red-600 */
-      --shadow: 0 10px 30px rgba(2,6,23,.08);
-      --radius: 14px;
+      --bg:#f6f8fc;
+      --surface:#ffffff;
+      --surface2:#f2f5fb;
+      --text:#0f172a;
+      --muted:#475569;
+      --muted2:#64748b;
+      --border:#e2e8f0;
+      --border2:#cbd5e1;
+      --accent:#2563eb;
+      --accent2:#16a34a;
+      --danger:#dc2626;
+      --shadow:0 10px 30px rgba(2,6,23,.08);
+      --radius:14px;
     }
-
-    *{ box-sizing: border-box; }
+    *{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
       margin:0;
@@ -34,28 +32,27 @@
         radial-gradient(1000px 550px at 10% -15%, rgba(37,99,235,.08), transparent 60%),
         radial-gradient(900px 500px at 110% 0%, rgba(22,163,74,.06), transparent 55%),
         var(--bg);
-      color: var(--text);
+      color:var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      line-height: 1.35;
+      line-height:1.35;
     }
-
     header{
-      position: sticky; top:0; z-index: 50;
+      position:sticky; top:0; z-index:50;
       display:flex; align-items:center; justify-content:space-between; gap:14px;
       padding:14px 18px;
       border-bottom:1px solid var(--border);
       background: rgba(255,255,255,.86);
       backdrop-filter: blur(10px);
     }
-    .brand{ display:flex; align-items:center; gap:10px; min-width: 240px; }
+    .brand{ display:flex; align-items:center; gap:10px; min-width:240px; }
     .logo{
       width:34px; height:34px; border-radius:10px;
       background: linear-gradient(145deg, rgba(37,99,235,.18), rgba(22,163,74,.12));
       border:1px solid rgba(37,99,235,.20);
       box-shadow: 0 10px 25px rgba(2,6,23,.10);
     }
-    h1{ margin:0; font-size: 14px; letter-spacing: .2px; font-weight: 800; }
-    .subtitle{ font-size: 11px; color: var(--muted2); margin-top: 2px; }
+    h1{ margin:0; font-size:14px; letter-spacing:.2px; font-weight:800; }
+    .subtitle{ font-size:11px; color:var(--muted2); margin-top:2px; }
 
     .statusWrap{
       display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;
@@ -65,102 +62,100 @@
       display:inline-flex; align-items:center; gap:8px;
       padding:8px 10px;
       border:1px solid var(--border);
-      border-radius: 999px;
+      border-radius:999px;
       background: rgba(255,255,255,.9);
       color: var(--muted);
-      font-size: 12px;
+      font-size:12px;
     }
     .dot{ width:8px; height:8px; border-radius:999px; background: var(--muted2); opacity:.9; }
     .dot.ok{ background: var(--accent2); }
     .dot.bad{ background: var(--danger); }
 
     .wrap{
-      padding: 16px 18px 22px;
+      padding:16px 18px 22px;
       display:grid;
-      grid-template-columns: 380px 1fr;
-      gap: 14px;
-      max-width: 1600px;
-      margin: 0 auto;
+      grid-template-columns:380px 1fr;
+      gap:14px;
+      max-width:1600px;
+      margin:0 auto;
     }
-    @media (max-width: 1100px){
-      .wrap{ grid-template-columns: 1fr; }
-    }
+    @media (max-width:1100px){ .wrap{ grid-template-columns:1fr; } }
 
     .card{
       background: var(--surface);
-      border: 1px solid var(--border);
+      border:1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
     .cardHeader{
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
+      padding:12px 14px;
+      border-bottom:1px solid var(--border);
       display:flex; align-items:center; justify-content:space-between; gap:10px;
     }
     .cardHeader h2{
       margin:0;
-      font-size: 12px;
+      font-size:12px;
       color: var(--muted);
-      font-weight: 900;
-      letter-spacing: .3px;
-      text-transform: uppercase;
+      font-weight:900;
+      letter-spacing:.3px;
+      text-transform:uppercase;
     }
-    .cardBody{ padding: 14px; }
+    .cardBody{ padding:14px; }
 
     label{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
-      font-size: 12px;
+      font-size:12px;
       color: var(--muted);
-      margin: 12px 0 6px;
+      margin:12px 0 6px;
     }
-    .help{ font-size: 11px; color: var(--muted2); }
+    .help{ font-size:11px; color: var(--muted2); }
 
-    select, input[type="file"], input[type="number"], input[type="range"], input[type="text"]{
-      width: 100%;
-      border-radius: 12px;
-      border: 1px solid var(--border2);
+    select, input[type="file"], input[type="number"], input[type="range"], input[type="text"], input[type="date"]{
+      width:100%;
+      border-radius:12px;
+      border:1px solid var(--border2);
       background: var(--surface);
       color: var(--text);
-      padding: 10px 12px;
-      outline: none;
+      padding:10px 12px;
+      outline:none;
     }
     select:focus, input:focus{
       border-color: rgba(37,99,235,.55);
       box-shadow: 0 0 0 3px rgba(37,99,235,.12);
     }
-    select[multiple]{ height: 220px; padding: 10px; }
+    select[multiple]{ height:220px; padding:10px; }
 
-    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-    @media (max-width: 520px){ .grid2{ grid-template-columns: 1fr; } }
+    .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    @media (max-width:520px){ .grid2{ grid-template-columns:1fr; } }
 
-    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
     button{
-      border: 1px solid var(--border2);
+      border:1px solid var(--border2);
       background: var(--surface);
       color: var(--text);
-      padding: 10px 12px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 750;
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:12px;
+      font-weight:750;
     }
     button:hover{ border-color: rgba(37,99,235,.45); }
     button.primary{
       background: linear-gradient(180deg, rgba(37,99,235,.10), rgba(255,255,255,1));
       border-color: rgba(37,99,235,.35);
     }
-    button.ghost{ background: transparent; }
+    button.ghost{ background:transparent; }
 
     .drop{
-      border: 1px dashed rgba(37,99,235,.45);
+      border:1px dashed rgba(37,99,235,.45);
       background: rgba(37,99,235,.04);
-      border-radius: 14px;
-      padding: 12px;
+      border-radius:14px;
+      padding:12px;
       display:flex; flex-direction:column; gap:8px;
     }
     .dropTop{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
-    .dropHint{ font-size: 12px; color: var(--muted); }
-    .dropSmall{ font-size: 11px; color: var(--muted2); }
+    .dropHint{ font-size:12px; color: var(--muted); }
+    .dropSmall{ font-size:11px; color: var(--muted2); }
     .drop.dragover{
       background: rgba(22,163,74,.06);
       border-color: rgba(22,163,74,.45);
@@ -169,81 +164,80 @@
     .kpis{
       display:grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 12px;
+      gap:10px;
+      margin-top:12px;
     }
-    @media (max-width: 1100px){ .kpis{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width:1100px){ .kpis{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .kpi{
       background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 10px 12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:10px 12px;
     }
-    .kpiName{ font-size: 11px; color: var(--muted); font-weight: 800; }
-    .kpiVal{ margin-top: 6px; font-size: 16px; font-weight: 900; }
-    .kpiSub{ margin-top: 2px; font-size: 11px; color: var(--muted2); }
+    .kpiName{ font-size:11px; color: var(--muted); font-weight:800; }
+    .kpiVal{ margin-top:6px; font-size:16px; font-weight:900; }
+    .kpiSub{ margin-top:2px; font-size:11px; color: var(--muted2); }
 
     table{
-      width: 100%;
-      border-collapse: collapse;
+      width:100%;
+      border-collapse:collapse;
       overflow:hidden;
-      border-radius: 14px;
-      border: 1px solid var(--border);
+      border-radius:14px;
+      border:1px solid var(--border);
       background: var(--surface);
     }
     th, td{
-      padding: 10px 10px;
-      border-bottom: 1px solid var(--border);
-      font-size: 12px;
-      text-align: left;
-      vertical-align: top;
+      padding:10px 10px;
+      border-bottom:1px solid var(--border);
+      font-size:12px;
+      text-align:left;
+      vertical-align:top;
     }
-    th{ color: var(--muted); font-weight: 900; background: rgba(241,245,249,.9); }
-    tr:last-child td{ border-bottom: none; }
+    th{ color: var(--muted); font-weight:900; background: rgba(241,245,249,.9); }
+    tr:last-child td{ border-bottom:none; }
     .right{ text-align:right; }
-    .pos{ color: var(--accent2); font-weight: 800; }
-    .neg{ color: var(--danger); font-weight: 800; }
+    .pos{ color: var(--accent2); font-weight:800; }
+    .neg{ color: var(--danger); font-weight:800; }
 
-    .togRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .togRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
     .toggle{
       display:flex; align-items:center; gap:8px;
-      padding: 8px 10px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
       background: var(--surface);
-      font-size: 12px;
+      font-size:12px;
       color: var(--muted);
       user-select:none;
     }
     .toggle input{ accent-color: var(--accent); }
 
-    /* Segmented control */
     .seg{
       display:flex;
       border:1px solid var(--border2);
-      border-radius: 12px;
+      border-radius:12px;
       overflow:hidden;
       background: var(--surface);
     }
     .seg button{
-      border: none;
-      border-right: 1px solid var(--border);
-      border-radius: 0;
-      padding: 10px 10px;
+      border:none;
+      border-right:1px solid var(--border);
+      border-radius:0;
+      padding:10px 10px;
       background: transparent;
-      font-weight: 850;
+      font-weight:850;
       color: var(--muted);
-      flex: 1;
+      flex:1;
     }
-    .seg button:last-child{ border-right: none; }
+    .seg button:last-child{ border-right:none; }
     .seg button.active{
       background: rgba(37,99,235,.10);
       color: var(--text);
     }
 
-    #chart{ height: 520px; }
+    #chart{ height:520px; }
 
-    .note{ font-size: 12px; color: var(--muted); }
+    .note{ font-size:12px; color: var(--muted); }
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
 
     .loader{
@@ -257,9 +251,11 @@
       width:14px; height:14px; border-radius:999px;
       border:2px solid rgba(2,6,23,.12);
       border-top-color: rgba(37,99,235,.85);
-      animation: spin 0.9s linear infinite;
+      animation: spin .9s linear infinite;
     }
     @keyframes spin{ to{ transform: rotate(360deg); } }
+
+    .smallBlock{ margin-top:6px; }
   </style>
 </head>
 
@@ -290,6 +286,7 @@
       <h2>Controls</h2>
       <span class="help" id="fileMeta">No file</span>
     </div>
+
     <div class="cardBody">
       <div class="drop" id="dropZone">
         <div class="dropTop">
@@ -306,6 +303,21 @@
         <button id="grainMonthly" type="button">Monthly</button>
       </div>
 
+      <label>Date range <span class="help">Filter what period is included</span></label>
+      <div class="grid2">
+        <div>
+          <input id="dateStart" type="date" disabled />
+          <div class="help smallBlock">Start date</div>
+        </div>
+        <div>
+          <input id="dateEnd" type="date" disabled />
+          <div class="help smallBlock">End date</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button id="clearDates">Clear date filter</button>
+      </div>
+
       <div class="grid2" style="margin-top:10px;">
         <div>
           <label for="metric">Metric <span class="help">What you trend</span></label>
@@ -320,6 +332,12 @@
       <label for="topn">Top N series <span class="help">Keeps chart readable</span></label>
       <input id="topn" type="range" min="1" max="30" value="10" />
       <div class="help">Top N: <span id="topnVal" class="mono">10</span></div>
+
+      <!-- NEW: Simple Top N explanation label -->
+      <div class="note" id="topNExplain">
+        <b>What this means:</b> The chart will only show the <b>Top N</b> lines (based on your selected metric),
+        so you don’t end up with hundreds of lines on the chart.
+      </div>
 
       <div class="togRow">
         <label class="toggle" title="Hide empty / (blank) dimension values">
@@ -344,7 +362,7 @@
       </div>
 
       <div style="margin-top:12px" class="note">
-        <b>Expected columns:</b> Date/Month, Search Keyword, Tactic, Model, Final URL, Cost, Impr./Impressions, Clicks, T1 VLP, T1 VDP, BSI. 【1-79352b】
+        <b>Expected columns:</b> Date/Month, Search Keyword, Tactic, Model, Final URL, Cost, Impr./Impressions, Clicks, T1 VLP, T1 VDP, BSI.
       </div>
     </div>
   </section>
@@ -389,9 +407,7 @@
     <section class="card" style="margin-top:14px;" aria-label="Notes">
       <div class="cardHeader"><h2>Notes</h2></div>
       <div class="cardBody">
-        <div class="note">
-          This dashboard is a static template on GitHub Pages. Your CSV is processed in your browser.
-        </div>
+        <div class="note">This dashboard is a static template on GitHub Pages. Your CSV is processed in your browser.</div>
       </div>
     </section>
   </main>
@@ -469,43 +485,6 @@ function toDate(x){
   return null;
 }
 
-/* ====== Time grain (Daily / Weekly / Monthly) ====== */
-let GRAIN = "weekly"; // default
-
-function dayKeyUTC(dateObj){
-  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
-  return d.toISOString().slice(0,10); // YYYY-MM-DD
-}
-
-function weekKeyUTC(dateObj){
-  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
-  const dayn = (d.getUTCDay() + 6) % 7; // Monday=0 … Sunday=6 【2-80fa4a】
-  d.setUTCDate(d.getUTCDate() - dayn);
-  return d.toISOString().slice(0,10); // Monday
-}
-
-function monthKeyUTC(dateObj){
-  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), 1));
-  return d.toISOString().slice(0,10); // YYYY-MM-01
-}
-
-function bucketKey(dateObj){
-  if(GRAIN === "daily") return dayKeyUTC(dateObj);
-  if(GRAIN === "monthly") return monthKeyUTC(dateObj);
-  return weekKeyUTC(dateObj); // weekly
-}
-
-function bucketLabel(key){
-  const d = new Date(key);
-  if(GRAIN === "daily"){
-    return d.toLocaleDateString(undefined, { month:"short", day:"2-digit", year:"numeric" });
-  }
-  if(GRAIN === "monthly"){
-    return d.toLocaleString(undefined, { month:"short", year:"numeric" });
-  }
-  return "Week of " + d.toLocaleDateString(undefined, { month:"short", day:"2-digit", year:"numeric" });
-}
-
 function fmtCompact(n){
   if(n == null || !Number.isFinite(n)) return "—";
   const abs = Math.abs(n);
@@ -541,6 +520,39 @@ function escapeHtml(s){
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
+}
+
+/* ====== Time grain ====== */
+let GRAIN = "weekly";
+
+function dayKeyUTC(dateObj){
+  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
+  return d.toISOString().slice(0,10);
+}
+function weekKeyUTC(dateObj){
+  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
+  const dayn = (d.getUTCDay() + 6) % 7; // Monday=0 … Sunday=6
+  d.setUTCDate(d.getUTCDate() - dayn);
+  return d.toISOString().slice(0,10);
+}
+function monthKeyUTC(dateObj){
+  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), 1));
+  return d.toISOString().slice(0,10);
+}
+function bucketKey(dateObj){
+  if(GRAIN === "daily") return dayKeyUTC(dateObj);
+  if(GRAIN === "monthly") return monthKeyUTC(dateObj);
+  return weekKeyUTC(dateObj);
+}
+function bucketLabel(key){
+  const d = new Date(key);
+  if(GRAIN === "daily"){
+    return d.toLocaleDateString(undefined, { month:"short", day:"2-digit", year:"numeric" });
+  }
+  if(GRAIN === "monthly"){
+    return d.toLocaleString(undefined, { month:"short", year:"numeric" });
+  }
+  return "Week of " + d.toLocaleDateString(undefined, { month:"short", day:"2-digit", year:"numeric" });
 }
 
 /* ========= State ========= */
@@ -581,7 +593,23 @@ const BREAKDOWNS = [
   { key:"account", label:"Account", tokens:[["account"]] }
 ];
 
-const LS_KEY = "skd_prefs_grain_white_v1";
+const LS_KEY = "skd_prefs_grain_white_dates_v1";
+
+/* ========= Date range state (from UI) ========= */
+let DATE_MIN = null;
+let DATE_MAX = null;
+
+function getDateRange(){
+  const s = $("dateStart").value ? new Date($("dateStart").value + "T00:00:00") : null;
+  const e = $("dateEnd").value ? new Date($("dateEnd").value + "T23:59:59") : null;
+  return { s, e };
+}
+
+function inRange(d, s, e){
+  if(s && d < s) return false;
+  if(e && d > e) return false;
+  return true;
+}
 
 /* ========= Detection ========= */
 function detectColumns(headers){
@@ -658,6 +686,13 @@ function buildStateFromCSV(csvText){
   DATA = out;
   COLS = colMap;
   DIM_OPTIONS = dimOpt;
+
+  // set min/max dates for date picker
+  if(DATA.length){
+    const sorted = [...DATA].sort((a,b)=>a.date - b.date);
+    DATE_MIN = sorted[0].date;
+    DATE_MAX = sorted[sorted.length-1].date;
+  }
 }
 
 /* ========= UI helpers ========= */
@@ -714,7 +749,9 @@ function savePrefs(){
     topn: Number($("topn").value),
     hideBlank: $("toggleHideBlank").checked,
     hideZero: $("toggleHideZero").checked,
-    filters: getMultiSelected($("filterValues"))
+    filters: getMultiSelected($("filterValues")),
+    dateStart: $("dateStart").value || "",
+    dateEnd: $("dateEnd").value || ""
   };
   localStorage.setItem(LS_KEY, JSON.stringify(prefs));
 }
@@ -748,7 +785,9 @@ function formatBySpec(spec, value){
 
 /* ========= Aggregation ========= */
 function aggregate(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZero){
-  let rows = DATA;
+  const { s: startD, e: endD } = getDateRange();
+
+  let rows = DATA.filter(r => inRange(r.date, startD, endD));
 
   if(filterVals && filterVals.length){
     const set = new Set(filterVals);
@@ -764,7 +803,7 @@ function aggregate(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZer
 
   const spec = metricSpec(metricKey);
 
-  const map = new Map(); // bucket||series -> sums
+  const map = new Map();
   for(const r of rows){
     const seriesName = (r[breakdownKey] || "(blank)").trim() || "(blank)";
     const bk = bucketKey(r.date);
@@ -781,7 +820,6 @@ function aggregate(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZer
     agg._count++;
   }
 
-  // totals per series (ranking Top N)
   const totals = new Map();
   for(const [k, agg] of map.entries()){
     const seriesName = k.split("||")[1];
@@ -832,7 +870,7 @@ function aggregate(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZer
     }
   }
 
-  return { buckets, series, bucketTotals, metric: spec, breakdownKey };
+  return { buckets, series, bucketTotals, metric: spec, breakdownKey, rowCount: rows.length };
 }
 
 /* ========= Rendering ========= */
@@ -869,7 +907,7 @@ function renderKPIs(bucketTotals){
     div.innerHTML = `
       <div class="kpiName">${spec.label}</div>
       <div class="kpiVal">${formatBySpec(spec,val)}</div>
-      <div class="kpiSub">All rows in file</div>
+      <div class="kpiSub">Based on current date filter</div>
     `;
     wrap.appendChild(div);
   }
@@ -879,7 +917,7 @@ function renderTopTable(agg){
   const tbody = $("topTable").querySelector("tbody");
   const buckets = agg.buckets;
   if(!buckets.length){
-    tbody.innerHTML = `<tr><td colspan="5" class="note">No data.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" class="note">No data for selected date range.</td></tr>`;
     return;
   }
 
@@ -935,15 +973,15 @@ function renderChart(agg, metricKey, breakdownKey, topN){
   let xTitle = "Date";
 
   if(GRAIN === "daily"){
-    dtick = 86400000; // 1 day in ms
+    dtick = 86400000;
     tickformat = "%b %d\n%Y";
     xTitle = "Day";
   } else if(GRAIN === "weekly"){
-    dtick = 604800000; // 7 days in ms 【3-bcc75e】【4-2b69f1】
+    dtick = 604800000; /* 7 days in ms 【2-78540e】【3-f582f5】 */
     tickformat = "Wk of %b %d\n%Y";
     xTitle = "Week";
   } else {
-    dtick = "M1"; // monthly tick step (used previously in your dashboard) 【6-9d36ce】
+    dtick = "M1";
     tickformat = "%b\n%Y";
     xTitle = "Month";
   }
@@ -952,7 +990,6 @@ function renderChart(agg, metricKey, breakdownKey, topN){
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
     font: { color: "#0f172a" },
-
     margin: { l: 70, r: 30, t: 60, b: 110 },
 
     legend: {
@@ -1047,7 +1084,7 @@ function render(){
   const topN = Number($("topn").value);
   const hideBlank = $("toggleHideBlank").checked;
   const hideZero = $("toggleHideZero").checked;
-  const filterVals = getMultiSelected($("filterValues"));
+  const filterVals = Array.from($("filterValues").selectedOptions).map(o=>o.value);
 
   const agg = aggregate(metricKey, breakdownKey, filterVals, topN, hideBlank, hideZero);
   LAST_AGG = { ...agg, metric: metricSpec(metricKey) };
@@ -1056,9 +1093,9 @@ function render(){
   renderKPIs(agg.bucketTotals);
   renderTopTable(agg);
 
-  const buckets = agg.buckets;
-  const range = buckets.length ? `${bucketLabel(buckets[0])} → ${bucketLabel(buckets[buckets.length-1])}` : "—";
-  $("summaryLine").textContent = `Grain: ${GRAIN.toUpperCase()} • Range: ${range} • Rows: ${DATA.length.toLocaleString()} • Filters: ${filterVals.length}`;
+  const rangeText = agg.buckets.length ? `${bucketLabel(agg.buckets[0])} → ${bucketLabel(agg.buckets[agg.buckets.length-1])}` : "—";
+  $("summaryLine").textContent =
+    `Grain: ${GRAIN.toUpperCase()} • Range: ${rangeText} • Rows used: ${agg.rowCount.toLocaleString()} • Filters: ${filterVals.length}`;
 
   savePrefs();
 }
@@ -1071,24 +1108,64 @@ function setGrainButtons(){
   else $("grainWeekly").classList.add("active");
 }
 
+function initDateControls(){
+  const start = $("dateStart");
+  const end = $("dateEnd");
+
+  if(!DATE_MIN || !DATE_MAX){
+    start.disabled = true;
+    end.disabled = true;
+    return;
+  }
+
+  const minISO = DATE_MIN.toISOString().slice(0,10);
+  const maxISO = DATE_MAX.toISOString().slice(0,10);
+
+  start.disabled = false;
+  end.disabled = false;
+
+  start.min = minISO; start.max = maxISO;
+  end.min = minISO; end.max = maxISO;
+
+  // If empty, default to full range
+  if(!start.value) start.value = minISO;
+  if(!end.value) end.value = maxISO;
+
+  // Keep bounds sane if user edits
+  start.addEventListener("change", ()=>{
+    if(end.value && start.value > end.value) end.value = start.value;
+    render();
+  });
+  end.addEventListener("change", ()=>{
+    if(start.value && end.value < start.value) start.value = end.value;
+    render();
+  });
+
+  $("clearDates").addEventListener("click", ()=>{
+    start.value = minISO;
+    end.value = maxISO;
+    render();
+  });
+}
+
 function initUI(){
   fillSelect($("metric"), METRICS.map(m=>({value:m.key, label:m.label})));
   fillSelect($("breakdown"), BREAKDOWNS.map(b=>({value:b.key, label:b.label})));
   $("topnVal").textContent = $("topn").value;
 
   $("topn").addEventListener("input", e=>{ $("topnVal").textContent = e.target.value; });
-  $("filterSearch").addEventListener("input", ()=> {
-    applyFilterSearch();
+
+  $("filterSearch").addEventListener("input", ()=>{
+    const q = $("filterSearch").value.trim().toLowerCase();
+    const sel = $("filterValues");
+    Array.from(sel.options).forEach(o=>{
+      o.hidden = q && !o.value.toLowerCase().includes(q);
+    });
   });
 
   $("breakdown").addEventListener("change", ()=>{
     const b = $("breakdown").value;
     fillMulti($("filterValues"), DIM_OPTIONS[b] ?? []);
-    applyFilterSearch();
-    const prefs = loadPrefs();
-    if(prefs && prefs.breakdown === b){
-      setMultiSelected($("filterValues"), prefs.filters || []);
-    }
   });
 
   $("apply").addEventListener("click", render);
@@ -1101,12 +1178,10 @@ function initUI(){
   $("btnDownloadAgg").addEventListener("click", downloadAggCSV);
   $("btnDownloadPng").addEventListener("click", downloadPNG);
 
-  // Grain buttons
   $("grainDaily").addEventListener("click", ()=>{ GRAIN="daily"; setGrainButtons(); render(); });
   $("grainWeekly").addEventListener("click", ()=>{ GRAIN="weekly"; setGrainButtons(); render(); });
   $("grainMonthly").addEventListener("click", ()=>{ GRAIN="monthly"; setGrainButtons(); render(); });
 
-  // Dropzone
   const drop = $("dropZone");
   ["dragenter","dragover"].forEach(evt=>{
     drop.addEventListener(evt, e=>{ e.preventDefault(); drop.classList.add("dragover"); });
@@ -1124,7 +1199,7 @@ function initUI(){
     if(f) await handleFile(f);
   });
 
-  // Load prefs
+  // Load prefs (applied after file load too)
   const prefs = loadPrefs();
   if(prefs){
     GRAIN = prefs.grain || "weekly";
@@ -1134,6 +1209,8 @@ function initUI(){
     $("topnVal").textContent = $("topn").value;
     $("toggleHideBlank").checked = prefs.hideBlank ?? true;
     $("toggleHideZero").checked = prefs.hideZero ?? false;
+    $("dateStart").value = prefs.dateStart || "";
+    $("dateEnd").value = prefs.dateEnd || "";
   } else {
     GRAIN = "weekly";
     $("metric").value = "cost";
@@ -1156,13 +1233,15 @@ async function handleFile(file){
 
     const b = $("breakdown").value;
     fillMulti($("filterValues"), DIM_OPTIONS[b] ?? []);
-    applyFilterSearch();
 
+    // Enable and initialize date pickers (uses file min/max)
+    initDateControls();
+
+    // restore filters after file load if prefs exist
     const prefs = loadPrefs();
     if(prefs){
       GRAIN = prefs.grain || GRAIN;
       setGrainButtons();
-
       $("metric").value = prefs.metric || $("metric").value;
       $("breakdown").value = prefs.breakdown || $("breakdown").value;
       $("topn").value = String(prefs.topn ?? $("topn").value);
@@ -1170,10 +1249,14 @@ async function handleFile(file){
       $("toggleHideBlank").checked = prefs.hideBlank ?? $("toggleHideBlank").checked;
       $("toggleHideZero").checked = prefs.hideZero ?? $("toggleHideZero").checked;
 
+      // re-init filter list for breakdown and apply selection
       const bb = $("breakdown").value;
       fillMulti($("filterValues"), DIM_OPTIONS[bb] ?? []);
-      applyFilterSearch();
       setMultiSelected($("filterValues"), prefs.filters || []);
+
+      // apply date prefs if set and within bounds
+      if(prefs.dateStart) $("dateStart").value = prefs.dateStart;
+      if(prefs.dateEnd) $("dateEnd").value = prefs.dateEnd;
     }
 
     setStatus(true, `Loaded ${DATA.length.toLocaleString()} rows • Date column: ${COLS.date}`);
@@ -1191,3 +1274,4 @@ initUI();
 </script>
 </body>
 </html>
+``
